@@ -1,0 +1,8 @@
+<!-- public/favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Magnifying glass -->
+  <circle cx="56" cy="56" r="24" fill="none" stroke="black" stroke-width="6"/>
+  <line x1="72" y1="72" x2="96" y2="96" stroke="black" stroke-width="8" stroke-linecap="round"/>
+  <!-- Music note -->
+  <path d="M80 32 v32 a10 10 0 1 1 -8 -10 v-22 h8z" fill="black"/>
+</svg>
