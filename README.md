@@ -1,4 +1,4 @@
-# Analyze This 🖕 
+# Analyze This 
 
 **Analyze This** is a React + Vite web app for musicians and producers to instantly detect the musical key of any song — right in the browser.  
 Powered by [Essentia.js](https://essentia.upf.edu/), a powerful music/audio analysis library compiled to WebAssembly.  
