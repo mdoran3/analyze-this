@@ -51,7 +51,8 @@ export default function App() {
   return (
     <div style={{ maxWidth: 720, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, sans-serif', textAlign: 'center' }}>
       <h1 style={{ marginBottom: 8 }} title="Analyze This">
-        Analyze This <span role="img" aria-label="middle finger">🖕</span>
+        Analyze This 
+        {/* <span role="img" aria-label="middle finger">🖕</span> */}
       </h1>
       <h2>🎵 Instant Key Detection for Musicians & Producers 🎵</h2>
       <p style={{ marginTop: 0, color: '#555' }}>Drop a song to estimate its musical key — in your browser.</p>
