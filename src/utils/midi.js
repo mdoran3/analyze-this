@@ -111,97 +111,6 @@ export function generateCommonProgressions(keyName, mode = 'major') {
 }
 
 /**
- * Create a simple MIDI file data structure
- * This creates a basic Type 0 MIDI file with one track
- */
-export function createMidiFile(notes, tempo = 120, duration = 480) {
-  // MIDI file header
-  const header = [
-    0x4D, 0x54, 0x68, 0x64, // "MThd"
-    0x00, 0x00, 0x00, 0x06, // Header length (6 bytes)
-    0x00, 0x00,             // Type 0 (single track)
-    0x00, 0x01,             // Number of tracks (1)
-    0x01, 0xE0              // Ticks per quarter note (480)
-  ]
-  
-  // Track events
-  const events = []
-  
-  // Tempo event (120 BPM)
-  const microsecondsPerBeat = Math.floor(60000000 / tempo)
-  events.push(
-    0x00,       // Delta time
-    0xFF, 0x51, 0x03, // Tempo meta event
-    (microsecondsPerBeat >> 16) & 0xFF,
-    (microsecondsPerBeat >> 8) & 0xFF,
-    microsecondsPerBeat & 0xFF
-  )
-  
-  // Note events
-  notes.forEach((note, index) => {
-    const deltaTime = index === 0 ? 0 : duration
-    
-    // Note on
-    events.push(
-      ...variableLengthQuantity(deltaTime),
-      0x90, note, 0x60 // Note on, velocity 96
-    )
-    
-    // Note off
-    events.push(
-      ...variableLengthQuantity(duration),
-      0x80, note, 0x40 // Note off, velocity 64
-    )
-  })
-  
-  // End of track
-  events.push(0x00, 0xFF, 0x2F, 0x00)
-  
-  // Track header
-  const trackHeader = [
-    0x4D, 0x54, 0x72, 0x6B, // "MTrk"
-    (events.length >> 24) & 0xFF,
-    (events.length >> 16) & 0xFF,
-    (events.length >> 8) & 0xFF,
-    events.length & 0xFF
-  ]
-  
-  return new Uint8Array([...header, ...trackHeader, ...events])
-}
-
-/**
- * Convert number to variable length quantity (MIDI format)
- */
-function variableLengthQuantity(value) {
-  const result = []
-  result.unshift(value & 0x7F)
-  
-  while (value > 0x7F) {
-    value >>= 7
-    result.unshift((value & 0x7F) | 0x80)
-  }
-  
-  return result
-}
-
-/**
- * Download MIDI file
- */
-export function downloadMidiFile(midiData, filename = 'generated.mid') {
-  const blob = new Blob([midiData], { type: 'audio/midi' })
-  const url = URL.createObjectURL(blob)
-  
-  const link = document.createElement('a')
-  link.href = url
-  link.download = filename
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  
-  URL.revokeObjectURL(url)
-}
-
-/**
  * Generate arpeggiated groove patterns
  */
 export function generateArpeggiatedGrooves(keyName, mode = 'major', bpm = 120) {
@@ -267,7 +176,6 @@ export function generateArpeggiatedGrooves(keyName, mode = 'major', bpm = 120) {
     
     variations.forEach(variation => {
       const notes = []
-      const events = []
       
       // Repeat pattern 4 times for a complete groove
       for (let repeat = 0; repeat < 4; repeat++) {
@@ -290,6 +198,65 @@ export function generateArpeggiatedGrooves(keyName, mode = 'major', bpm = 120) {
   }
   
   return grooves
+}
+
+/**
+ * Create a simple MIDI file data structure
+ * This creates a basic Type 0 MIDI file with one track
+ */
+export function createMidiFile(notes, tempo = 120, duration = 480) {
+  // MIDI file header
+  const header = [
+    0x4D, 0x54, 0x68, 0x64, // "MThd"
+    0x00, 0x00, 0x00, 0x06, // Header length (6 bytes)
+    0x00, 0x00,             // Type 0 (single track)
+    0x00, 0x01,             // Number of tracks (1)
+    0x01, 0xE0              // Ticks per quarter note (480)
+  ]
+  
+  // Track events
+  const events = []
+  
+  // Tempo event (120 BPM)
+  const microsecondsPerBeat = Math.floor(60000000 / tempo)
+  events.push(
+    0x00,       // Delta time
+    0xFF, 0x51, 0x03, // Tempo meta event
+    (microsecondsPerBeat >> 16) & 0xFF,
+    (microsecondsPerBeat >> 8) & 0xFF,
+    microsecondsPerBeat & 0xFF
+  )
+  
+  // Note events
+  notes.forEach((note, index) => {
+    const deltaTime = index === 0 ? 0 : duration
+    
+    // Note on
+    events.push(
+      ...variableLengthQuantity(deltaTime),
+      0x90, note, 0x60 // Note on, velocity 96
+    )
+    
+    // Note off
+    events.push(
+      ...variableLengthQuantity(duration),
+      0x80, note, 0x40 // Note off, velocity 64
+    )
+  })
+  
+  // End of track
+  events.push(0x00, 0xFF, 0x2F, 0x00)
+  
+  // Track header
+  const trackHeader = [
+    0x4D, 0x54, 0x72, 0x6B, // "MTrk"
+    (events.length >> 24) & 0xFF,
+    (events.length >> 16) & 0xFF,
+    (events.length >> 8) & 0xFF,
+    events.length & 0xFF
+  ]
+  
+  return new Uint8Array([...header, ...trackHeader, ...events])
 }
 
 /**
@@ -359,6 +326,42 @@ function createArpeggioMidiFile(noteEvents, tempo = 120) {
   
   return new Uint8Array([...header, ...trackHeader, ...events])
 }
+
+/**
+ * Convert number to variable length quantity (MIDI format)
+ */
+function variableLengthQuantity(value) {
+  const result = []
+  result.unshift(value & 0x7F)
+  
+  while (value > 0x7F) {
+    value >>= 7
+    result.unshift((value & 0x7F) | 0x80)
+  }
+  
+  return result
+}
+
+/**
+ * Download MIDI file
+ */
+export function downloadMidiFile(midiData, filename = 'generated.mid') {
+  const blob = new Blob([midiData], { type: 'audio/midi' })
+  const url = URL.createObjectURL(blob)
+  
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  
+  URL.revokeObjectURL(url)
+}
+
+/**
+ * Generate MIDI files for a detected key
+ */
 export function generateMidiForKey(keyName, mode = 'major', bpm = 120) {
   const scale = generateScale(keyName, mode, 2)
   const chords = generateChordProgression(keyName, mode)
