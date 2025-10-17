@@ -125,28 +125,6 @@ npm run dev
 
 ---
 
-## ☁️ Cloud Setup (Optional)
-
-To enable user accounts and project saving, you'll need to set up Supabase:
-
-### **Supabase Configuration**
-1. **Create a Supabase project** at [supabase.com](https://supabase.com)
-2. **Copy environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-3. **Add your Supabase credentials** to `.env`:
-   ```env
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-4. **Set up the database** by running the SQL in `database-schema.sql`
-5. **Restart the development server**
-
-See `SUPABASE_SETUP.md` for detailed instructions.
-
----
-
 ## 🔧 Development
 
 ### **Project Structure**
