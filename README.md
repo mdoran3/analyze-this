@@ -172,14 +172,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/mdoran3/analyze-this/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mdoran3/analyze-this/discussions)
-- **Documentation**: Check `SUPABASE_SETUP.md` for backend setup
-
----
-
 **Built with ❤️ for the music community**bash
+```
 git clone https://github.com/mdoran3/analyze-this.git
-cd analyze-this
+```
