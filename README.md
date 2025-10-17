@@ -26,5 +26,5 @@ Powered by [Essentia.js](https://essentia.upf.edu/), a powerful music/audio anal
 
 Clone the repo:
 ```bash
-git clone https://github.com/your-username/analyze-this.git
+git clone https://github.com/mdoran3/analyze-this.git
 cd analyze-this
