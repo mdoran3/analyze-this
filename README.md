@@ -157,24 +157,6 @@ npm run lint         # Run ESLint
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Here's how to get started:
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes**: Follow the existing code style
-4. **Test thoroughly**: Ensure audio analysis and MIDI features work
-5. **Submit a pull request**: Describe your changes clearly
-
-### **Development Guidelines**
-- Use TypeScript-style JSDoc comments
-- Maintain responsive design principles
-- Test with various audio formats
-- Preserve user privacy (local audio processing)
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
