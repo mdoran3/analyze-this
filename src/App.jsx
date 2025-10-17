@@ -1,6 +1,8 @@
 import React from 'react'
 import Dropper from './components/Dropper'
 import CircleOfFifths from './components/CircleOfFifths'
+import BPMDisplay from './components/BPMDisplay'
+import MidiExport from './components/MidiExport'
 import { decodeToMonoPCM } from './utils/audio'
 import { MSG } from './engine/messages'
 
@@ -51,7 +53,8 @@ export default function App() {
   return (
     <div style={{ maxWidth: 720, margin: '40px auto', padding: '0 20px', fontFamily: 'system-ui, sans-serif', textAlign: 'center' }}>
       <h1 style={{ marginBottom: 8 }} title="Analyze This">
-        Analyze This <span role="img" aria-label="middle finger">🖕</span>
+        Analyze This 
+        {/* <span role="img" aria-label="middle finger">🖕</span> */}
       </h1>
       <h2>🎵 Instant Key Detection for Musicians & Producers 🎵</h2>
       <p style={{ marginTop: 0, color: '#555' }}>Drop a song to estimate its musical key — in your browser.</p>
@@ -75,17 +78,24 @@ export default function App() {
         )}
         {error && <p style={{ color: 'crimson', whiteSpace: 'pre-wrap' }}>{error}</p>}
         {result && (
-          <div style={{ display: 'flex', gap: 24, alignItems: 'center', marginTop: 8 }}>
+          <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', marginTop: 8, flexWrap: 'wrap' }}>
             <CircleOfFifths keyName={result.key} mode={result.mode} />
-            <div>
+            <div style={{ flex: 1, minWidth: '200px' }}>
               <h2 style={{ margin: 0 }}>{result.key} {result.mode}</h2>
               <p style={{ margin: '6px 0', color: '#555' }}>
-                Confidence: {(result.confidence * 100).toFixed(0)}%
+                Key Confidence: {(result.keyConfidence * 100).toFixed(0)}%
               </p>
               <p style={{ marginTop: 10, fontSize: 13, color: '#666' }}>
-                Powered by Essentia KeyExtractor (WASM).
+                Powered by Essentia KeyExtractor & RhythmExtractor (WASM).
               </p>
             </div>
+            <BPMDisplay bpm={result.bpm} confidence={result.bpmConfidence} />
+          </div>
+        )}
+        
+        {result && (
+          <div style={{ marginTop: 24 }}>
+            <MidiExport keyName={result.key} mode={result.mode} bpm={result.bpm} />
           </div>
         )}
       </div>
