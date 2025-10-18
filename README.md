@@ -125,28 +125,6 @@ npm run dev
 
 ---
 
-## ☁️ Cloud Setup (Optional)
-
-To enable user accounts and project saving, you'll need to set up Supabase:
-
-### **Supabase Configuration**
-1. **Create a Supabase project** at [supabase.com](https://supabase.com)
-2. **Copy environment variables:**
-   ```bash
-   cp .env.example .env
-   ```
-3. **Add your Supabase credentials** to `.env`:
-   ```env
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
-4. **Set up the database** by running the SQL in `database-schema.sql`
-5. **Restart the development server**
-
-See `SUPABASE_SETUP.md` for detailed instructions.
-
----
-
 ## 🔧 Development
 
 ### **Project Structure**
@@ -179,24 +157,6 @@ npm run lint         # Run ESLint
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Here's how to get started:
-
-1. **Fork the repository**
-2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
-3. **Make your changes**: Follow the existing code style
-4. **Test thoroughly**: Ensure audio analysis and MIDI features work
-5. **Submit a pull request**: Describe your changes clearly
-
-### **Development Guidelines**
-- Use TypeScript-style JSDoc comments
-- Maintain responsive design principles
-- Test with various audio formats
-- Preserve user privacy (local audio processing)
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -212,14 +172,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/mdoran3/analyze-this/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/mdoran3/analyze-this/discussions)
-- **Documentation**: Check `SUPABASE_SETUP.md` for backend setup
-
----
-
 **Built with ❤️ for the music community**bash
+```
 git clone https://github.com/mdoran3/analyze-this.git
-cd analyze-this
+```
