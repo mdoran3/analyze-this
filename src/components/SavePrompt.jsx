@@ -102,19 +102,19 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
         
         {step === 'prompt' && (
           <>
-            <h2 style={{ margin: '0 0 16px 0', color: '#1f2937' }}>
+            <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
               🎵 Analysis Complete!
             </h2>
-            <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '24px' }}>
               Great! We've analyzed your track and found:
             </p>
             
             <div style={{
-              background: '#f3f4f6',
+              background: 'var(--clr-surface-tonal-a20)',
               padding: '16px',
               borderRadius: '8px',
               marginBottom: '24px',
-              color: '#000000'
+              color: 'var(--clr-neutral-a0)'
             }}>
               <div style={{ marginBottom: '8px' }}>
                 <strong>Key:</strong> {analysisResults.key} {analysisResults.mode}
@@ -126,19 +126,17 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               )}
             </div>
 
-            <p style={{ color: '#374151', marginBottom: '24px' }}>
+            <p style={{ color: 'var(--clr-neutral-a10)', marginBottom: '24px' }}>
               Would you like to save this analysis and generated MIDI files to your account?
             </p>
 
             <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button
                 onClick={onClose}
+                className="secondary"
                 style={{
                   padding: '8px 16px',
-                  border: '1px solid #d1d5db',
                   borderRadius: '6px',
-                  background: 'white',
-                  color: '#374151',
                   cursor: 'pointer'
                 }}
               >
@@ -146,12 +144,10 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               </button>
               <button
                 onClick={handleSaveClick}
+                className="primary"
                 style={{
                   padding: '8px 16px',
-                  border: 'none',
                   borderRadius: '6px',
-                  background: '#3b82f6',
-                  color: 'white',
                   cursor: 'pointer',
                   fontWeight: '500'
                 }}
@@ -164,18 +160,18 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
 
         {step === 'naming' && (
           <>
-            <h2 style={{ margin: '0 0 16px 0', color: '#1f2937' }}>
+            <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
               Name Your Project
             </h2>
-            <p style={{ color: '#6b7280', marginBottom: '16px' }}>
+            <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '16px' }}>
               Give your musical analysis a memorable name{!isAuthenticated ? ' (you\'ll need to sign in to save)' : ' and save it to your account'}:
             </p>
             
             {!isAuthenticated && (
               <div style={{
-                background: '#fef3c7',
-                border: '1px solid #f59e0b',
-                color: '#92400e',
+                background: 'var(--clr-warning-a60)',
+                border: '1px solid var(--clr-warning-a20)',
+                color: 'var(--clr-warning-a0)',
                 padding: '8px 12px',
                 borderRadius: '6px',
                 fontSize: '14px',
@@ -194,17 +190,19 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               style={{
                 width: '100%',
                 padding: '12px',
-                border: '1px solid #d1d5db',
+                border: '1px solid var(--clr-surface-a30)',
                 borderRadius: '6px',
                 fontSize: '14px',
                 marginBottom: '16px',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                background: 'var(--clr-surface-a0)',
+                color: 'var(--clr-neutral-a0)'
               }}
               autoFocus
             />
 
             {error && (
-              <p style={{ color: '#ef4444', fontSize: '14px', marginBottom: '16px' }}>
+              <p style={{ color: 'var(--clr-danger-a0)', fontSize: '14px', marginBottom: '16px' }}>
                 {error}
               </p>
             )}
@@ -213,12 +211,10 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               <button
                 onClick={() => setStep('prompt')}
                 disabled={saving}
+                className="secondary"
                 style={{
                   padding: '8px 16px',
-                  border: '1px solid #d1d5db',
                   borderRadius: '6px',
-                  background: 'white',
-                  color: '#374151',
                   cursor: saving ? 'not-allowed' : 'pointer',
                   opacity: saving ? 0.5 : 1
                 }}
@@ -228,12 +224,10 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               <button
                 onClick={handleSave}
                 disabled={saving || !projectName.trim()}
+                className="success"
                 style={{
                   padding: '8px 16px',
-                  border: 'none',
                   borderRadius: '6px',
-                  background: '#10b981',
-                  color: 'white',
                   cursor: (saving || !projectName.trim()) ? 'not-allowed' : 'pointer',
                   fontWeight: '500',
                   opacity: (saving || !projectName.trim()) ? 0.5 : 1

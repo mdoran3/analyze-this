@@ -9,13 +9,60 @@ html, body {
 }
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  /* Base colors */
+  --clr-dark-a0: #000000;
+  --clr-light-a0: #ffffff;
+
+  /* Theme primary colors */
+  --clr-primary-a0: #d55d20;
+  --clr-primary-a10: #dd7039;
+  --clr-primary-a20: #e58251;
+  --clr-primary-a30: #eb9469;
+  --clr-primary-a40: #f1a681;
+  --clr-primary-a50: #f6b799;
+
+  /* Theme surface colors */
+  --clr-surface-a0: #121212;
+  --clr-surface-a10: #282828;
+  --clr-surface-a20: #3f3f3f;
+  --clr-surface-a30: #575757;
+  --clr-surface-a40: #717171;
+  --clr-surface-a50: #8b8b8b;
+
+  /* Theme tonal surface colors */
+  --clr-surface-tonal-a0: #241a15;
+  --clr-surface-tonal-a10: #392f2a;
+  --clr-surface-tonal-a20: #4f4541;
+  --clr-surface-tonal-a30: #665d59;
+  --clr-surface-tonal-a40: #7d7672;
+  --clr-surface-tonal-a50: #96908d;
+
+  /* Success colors */
+  --clr-success-a0: #22946e;
+  --clr-success-a10: #47d5a6;
+  --clr-success-a20: #9ae8ce;
+
+  /* Warning colors */
+  --clr-warning-a0: #a87a2a;
+  --clr-warning-a10: #d7ac61;
+  --clr-warning-a20: #ecd7b2;
+
+  /* Danger colors */
+  --clr-danger-a0: #9c2121;
+  --clr-danger-a10: #d94a4a;
+  --clr-danger-a20: #eb9e9e;
+
+  /* Info colors */
+  --clr-info-a0: #21498a;
+  --clr-info-a10: #4077d1;
+  --clr-info-a20: #92b2e5;
+
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--clr-light-a0);
+  background-color: var(--clr-surface-a0);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,11 +72,12 @@ html, body {
 
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: var(--clr-primary-a30);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 a:hover {
-  color: #535bf2;
+  color: var(--clr-primary-a10);
 }
 
 body {
@@ -37,41 +85,115 @@ body {
   padding: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: linear-gradient(135deg, var(--clr-surface-a0) 0%, var(--clr-surface-tonal-a0) 100%);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  font-size: 2.8em;
+  line-height: 1.2;
+  color: var(--clr-light-a0);
+  font-weight: 700;
+}
+
+h2 {
+  color: var(--clr-primary-a30);
+  font-weight: 600;
+}
+
+h3 {
+  color: var(--clr-surface-a50);
+  font-weight: 500;
 }
 
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  border: 1px solid var(--clr-surface-a30);
+  padding: 0.75em 1.5em;
+  font-size: 0.95em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: var(--clr-surface-a20);
+  color: var(--clr-light-a0);
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+button:hover {
+  background-color: var(--clr-primary-a0);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-primary-a0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(213, 93, 32, 0.3);
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--clr-primary-a20);
+  outline-offset: 2px;
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Primary button variant */
+button.primary {
+  background-color: var(--clr-primary-a0);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-primary-a0);
+}
+
+button.primary:hover {
+  background-color: var(--clr-primary-a10);
+  border-color: var(--clr-primary-a10);
+}
+
+/* Secondary button variant */
+button.secondary {
+  background-color: var(--clr-surface-a30);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-surface-a30);
+}
+
+button.secondary:hover {
+  background-color: var(--clr-surface-a40);
+  border-color: var(--clr-surface-a40);
+}
+
+/* Success button variant */
+button.success {
+  background-color: var(--clr-success-a0);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-success-a0);
+}
+
+button.success:hover {
+  background-color: var(--clr-success-a10);
+  border-color: var(--clr-success-a10);
+}
+
+/* Warning button variant */
+button.warning {
+  background-color: var(--clr-warning-a0);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-warning-a0);
+}
+
+button.warning:hover {
+  background-color: var(--clr-warning-a10);
+  border-color: var(--clr-warning-a10);
+}
+
+/* Danger button variant */
+button.danger {
+  background-color: var(--clr-danger-a0);
+  color: var(--clr-light-a0);
+  border-color: var(--clr-danger-a0);
+}
+
+button.danger:hover {
+  background-color: var(--clr-danger-a10);
+  border-color: var(--clr-danger-a10);
 }

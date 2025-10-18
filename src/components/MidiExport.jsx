@@ -93,10 +93,10 @@ export default function MidiExport({ keyName, mode, bpm }) {
   
   return (
     <div style={{
-      border: '1px solid #e5e7eb',
+      border: '1px solid var(--clr-surface-a20)',
       borderRadius: '8px',
       padding: '16px',
-      background: '#f9fafb',
+      background: 'var(--clr-surface-tonal-a20)',
       minWidth: '300px'
     }}>
       <div 
@@ -108,10 +108,10 @@ export default function MidiExport({ keyName, mode, bpm }) {
         }}
         onClick={() => setExpanded(!expanded)}
       >
-        <h3 style={{ margin: 0, color: '#374151' }}>
-          🎹 MIDI Export {midiData?.bpm && `(${midiData.bpm} BPM)`}
+                <h3 style={{ margin: 0, color: 'var(--clr-neutral-a0)' }}>
+          � MIDI Export ({keyName} {mode})
         </h3>
-        <span style={{ color: '#6b7280' }}>{expanded ? '▼' : '▶'}</span>
+        <span style={{ color: 'var(--clr-neutral-a30)' }}>{expanded ? '▼' : '▶'}</span>
       </div>
       
       {expanded && (

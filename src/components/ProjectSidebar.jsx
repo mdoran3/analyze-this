@@ -8,6 +8,22 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
   const [collapsed, setCollapsed] = useState(false)
   const { user, isAuthenticated, signOut } = useAuth()
 
+  const playClickSound = (isOpening) => {
+    try {
+      const soundFile = isOpening 
+        ? '/sounds/hsb_kit2_click.wav'      // Opening pane
+        : '/sounds/TSP_CADM_Hohner_click.wav'  // Closing pane
+      
+      const audio = new Audio(soundFile)
+      audio.volume = 0.5 // Adjust volume as needed
+      audio.play().catch(err => {
+        console.log('Audio play failed:', err) // Graceful fallback
+      })
+    } catch (err) {
+      console.log('Audio loading failed:', err)
+    }
+  }
+
   useEffect(() => {
     if (isAuthenticated) {
       loadProjects()
@@ -82,10 +98,10 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
   if (!isAuthenticated) {
     return (
       <div style={{
-        width: collapsed ? '50px' : '280px',
+        width: collapsed ? '60px' : '190px',
         height: '100vh',
-        background: '#f9fafb',
-        borderRight: '1px solid #e5e7eb',
+        background: 'var(--clr-surface-a20)',
+        borderRight: '1px solid var(--clr-surface-a30)',
         padding: '16px',
         boxSizing: 'border-box',
         transition: 'width 0.3s ease'
@@ -93,7 +109,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'space-between',
+          justifyContent: collapsed ? 'center' : 'space-between',
           marginBottom: '16px'
         }}>
           {!collapsed && (
@@ -102,21 +118,45 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
             </h3>
           )}
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => {
+              playClickSound(collapsed) // collapsed = true means we're opening, false means closing
+              setCollapsed(!collapsed)
+            }}
+            className="collapse-button"
             style={{
-              background: 'none',
+              background: 'linear-gradient(135deg, var(--clr-primary-a0), #ff6b35)',
               border: 'none',
+              borderRadius: '50%',
               cursor: 'pointer',
-              color: '#6b7280',
-              fontSize: '16px'
+              color: 'white',
+              fontSize: '16px',
+              padding: '8px',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2), 0 0 8px rgba(213, 93, 32, 0.3)',
+              outline: '2px solid var(--clr-primary-a20)',
+              outlineOffset: '2px'
             }}
           >
-            {collapsed ? '▶' : '◀'}
+            <span style={{
+              transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)',
+              transition: 'transform 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              lineHeight: '1'
+            }}>
+              ››
+            </span>
           </button>
         </div>
         
         {!collapsed && (
-          <p style={{ color: '#9ca3af', fontSize: '12px', textAlign: 'center' }}>
+          <p style={{ color: 'var(--clr-neutral-a40)', fontSize: '12px', textAlign: 'center' }}>
             Sign in to save and manage your projects
           </p>
         )}
@@ -126,10 +166,10 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
 
   return (
     <div style={{
-      width: collapsed ? '50px' : '280px',
+      width: collapsed ? '60px' : '190px',
       height: '100vh',
-      background: '#f9fafb',
-      borderRight: '1px solid #e5e7eb',
+      background: 'var(--clr-surface-a20)',
+      borderRight: '1px solid var(--clr-surface-a30)',
       display: 'flex',
       flexDirection: 'column',
       transition: 'width 0.3s ease'
@@ -137,30 +177,54 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
       {/* Header */}
       <div style={{ 
         padding: '16px',
-        borderBottom: '1px solid #e5e7eb'
+        borderBottom: '1px solid var(--clr-surface-a30)'
       }}>
         <div style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'space-between',
+          justifyContent: collapsed ? 'center' : 'space-between',
           marginBottom: collapsed ? 0 : '12px'
         }}>
           {!collapsed && (
-            <h3 style={{ margin: 0, color: '#374151', fontSize: '16px' }}>
+            <h3 style={{ margin: 0, color: 'var(--clr-neutral-a30)', fontSize: '14px' }}>
               My Projects
             </h3>
           )}
           <button
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={() => {
+              playClickSound(collapsed) // collapsed = true means we're opening, false means closing
+              setCollapsed(!collapsed)
+            }}
+            className="collapse-button"
             style={{
-              background: 'none',
+              background: 'linear-gradient(135deg, var(--clr-primary-a0), #ff6b35)',
               border: 'none',
+              borderRadius: '50%',
               cursor: 'pointer',
-              color: '#6b7280',
-              fontSize: '16px'
+              color: 'white',
+              fontSize: '16px',
+              padding: '8px',
+              width: '28px',
+              height: '28px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2), 0 0 8px rgba(213, 93, 32, 0.3)',
+              outline: '2px solid var(--clr-primary-a20)',
+              outlineOffset: '2px'
             }}
           >
-            {collapsed ? '▶' : '◀'}
+            <span style={{
+              transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)',
+              transition: 'transform 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              lineHeight: '1'
+            }}>
+              ››
+            </span>
           </button>
         </div>
         
@@ -170,7 +234,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
             alignItems: 'center', 
             justifyContent: 'space-between'
           }}>
-            <span style={{ color: '#6b7280', fontSize: '12px' }}>
+            <span style={{ color: 'var(--clr-neutral-a30)', fontSize: '12px' }}>
               {user.email}
             </span>
             <button
@@ -178,7 +242,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#6b7280',
+                color: 'var(--clr-neutral-a30)',
                 cursor: 'pointer',
                 fontSize: '11px',
                 textDecoration: 'underline'
@@ -198,19 +262,19 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
           padding: '16px'
         }}>
           {loading && (
-            <p style={{ color: '#6b7280', fontSize: '14px', textAlign: 'center' }}>
+            <p style={{ color: 'var(--clr-neutral-a30)', fontSize: '14px', textAlign: 'center' }}>
               Loading projects...
             </p>
           )}
 
           {error && (
-            <p style={{ color: '#ef4444', fontSize: '14px', textAlign: 'center' }}>
+            <p style={{ color: 'var(--clr-danger-a0)', fontSize: '14px', textAlign: 'center' }}>
               {error}
             </p>
           )}
 
           {!loading && !error && projects.length === 0 && (
-            <p style={{ color: '#9ca3af', fontSize: '12px', textAlign: 'center' }}>
+            <p style={{ color: 'var(--clr-neutral-a40)', fontSize: '12px', textAlign: 'center' }}>
               No projects yet. Analyze a song to create your first project!
             </p>
           )}
@@ -219,8 +283,8 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
             <div
               key={project.id}
               style={{
-                background: currentProject?.id === project.id ? '#dbeafe' : 'white',
-                border: '1px solid #e5e7eb',
+                background: currentProject?.id === project.id ? 'var(--clr-primary-a60)' : 'var(--clr-surface-a0)',
+                border: '1px solid var(--clr-surface-a20)',
                 borderRadius: '8px',
                 padding: '12px',
                 marginBottom: '8px',
@@ -230,12 +294,12 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
               onClick={() => handleProjectClick(project)}
               onMouseEnter={(e) => {
                 if (currentProject?.id !== project.id) {
-                  e.target.style.background = '#f3f4f6'
+                  e.target.style.background = 'var(--clr-surface-a10)'
                 }
               }}
               onMouseLeave={(e) => {
                 if (currentProject?.id !== project.id) {
-                  e.target.style.background = 'white'
+                  e.target.style.background = 'var(--clr-surface-a0)'
                 }
               }}
             >
@@ -249,7 +313,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
                   margin: 0, 
                   fontSize: '14px', 
                   fontWeight: '500',
-                  color: '#374151',
+                  color: 'var(--clr-neutral-a0)',
                   lineHeight: '1.3'
                 }}>
                   {project.name}
@@ -262,7 +326,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#ef4444',
+                    color: 'var(--clr-danger-a0)',
                     cursor: 'pointer',
                     fontSize: '12px',
                     padding: '2px'
@@ -273,7 +337,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
                 </button>
               </div>
               
-              <div style={{ fontSize: '12px', color: '#6b7280' }}>
+              <div style={{ fontSize: '12px', color: 'var(--clr-neutral-a30)' }}>
                 {project.analysis_results?.key} {project.analysis_results?.mode}
                 {project.analysis_results?.bpm > 0 && (
                   <span> • {project.analysis_results.bpm} BPM</span>
@@ -291,6 +355,41 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
           ))}
         </div>
       )}
+      
+      <style>{`
+        button.collapse-button {
+          /* Outline now handled in inline styles */
+        }
+        
+        button.collapse-button:hover {
+          transform: scale(1.1) rotate(5deg) !important;
+          box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.3),
+            0 0 12px rgba(213, 93, 32, 0.5) !important;
+          outline: none !important;
+        }
+        
+        button.collapse-button:active {
+          transform: scale(0.9) !important;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+          outline: none !important;
+        }
+        
+        button.collapse-button:focus {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+        
+        button.collapse-button:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+        
+        button.collapse-button::-moz-focus-inner {
+          border: 0 !important;
+          outline: none !important;
+        }
+      `}</style>
     </div>
   )
 }

@@ -11,7 +11,7 @@ export default function CircleOfFifths({ keyName, mode }) {
 
   return (
     <svg width={size} height={size} role="img" aria-label="Circle of Fifths">
-      <circle cx={center} cy={center} r={radius+28} fill="#fff" stroke="#ddd" />
+      <circle cx={center} cy={center} r={radius+28} fill="var(--secondary-dark)" stroke="var(--medium-gray)" strokeWidth="2" />
       {ORDER.map((k, i) => {
         const angle = i * slice - Math.PI/2
         const x = center + Math.cos(angle) * radius
@@ -19,18 +19,23 @@ export default function CircleOfFifths({ keyName, mode }) {
         const isActive = i === activeIdx
         return (
           <g key={k}>
+            <circle cx={x} cy={y} r={isActive ? 20 : 16} 
+              fill={isActive ? 'var(--accent-blue)' : 'var(--primary-dark)'} 
+              stroke={isActive ? 'var(--accent-blue)' : 'var(--medium-gray)'} 
+              strokeWidth={isActive ? 2 : 1} 
+            />
             <text x={x} y={y} textAnchor="middle" dominantBaseline="middle"
-              style={{ fontFamily: 'system-ui, sans-serif', fontSize: 14, fontWeight: isActive ? 700 : 400,
-                       fill: isActive ? '#000' : '#555' }}>
+              style={{ fontFamily: 'Inter, system-ui, sans-serif', fontSize: 14, fontWeight: isActive ? 700 : 500,
+                       fill: isActive ? 'white' : 'var(--light-beige)' }}>
               {k}
             </text>
           </g>
         )
       })}
-      <text x={center} y={center-8} textAnchor="middle" style={{ fontFamily: 'system-ui', fontSize: 18, fontWeight: 700 }}>
+      <text x={center} y={center-8} textAnchor="middle" style={{ fontFamily: 'Inter, system-ui', fontSize: 20, fontWeight: 700, fill: 'var(--light-beige)' }}>
         {keyName || '—'}
       </text>
-      <text x={center} y={center+14} textAnchor="middle" style={{ fontFamily: 'system-ui', fontSize: 12, fill: '#666' }}>
+      <text x={center} y={center+14} textAnchor="middle" style={{ fontFamily: 'Inter, system-ui', fontSize: 12, fill: 'var(--accent-blue)' }}>
         {mode ? mode.toUpperCase() : ''}
       </text>
     </svg>

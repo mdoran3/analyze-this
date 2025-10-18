@@ -1,0 +1,41 @@
+<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark background for better visibility -->
+  <rect width="600" height="400" fill="transparent"/>
+  
+  <!-- Text "analyze" at top -->
+  <text x="300" y="80" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="#e8e8e8" text-anchor="middle">analyze</text>
+  
+  <!-- Audio mixer interface -->
+  <rect x="100" y="140" width="400" height="160" rx="20" ry="20" fill="none" stroke="#d55d20" stroke-width="6"/>
+  
+  <!-- Text "this" positioned in the mixer area -->
+  <text x="380" y="240" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="#e8e8e8" text-anchor="middle">this</text>
+  
+  <!-- Circular controls (top left) -->
+  <circle cx="140" cy="180" r="12" fill="#d55d20"/>
+  <circle cx="170" cy="180" r="12" fill="#e6a068"/>
+  <circle cx="200" cy="180" r="12" fill="#f0c794"/>
+  
+  <!-- Small indicator -->
+  <circle cx="140" cy="210" r="4" fill="#d55d20"/>
+  
+  <!-- Fader controls -->
+  <g transform="translate(150, 230)">
+    <!-- Fader tracks -->
+    <rect x="0" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    <rect x="25" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    <rect x="70" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    <rect x="95" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    <rect x="120" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    <rect x="145" y="0" width="6" height="60" fill="#f0c794" rx="3"/>
+    
+    <!-- Fader handles -->
+    <rect x="-4" y="20" width="14" height="8" fill="#e6a068" rx="4"/>
+    <rect x="21" y="30" width="14" height="8" fill="#e6a068" rx="4"/>
+    <rect x="60" y="15" width="10" height="8" fill="#f0c794" rx="4"/>
+    <rect x="66" y="25" width="14" height="8" fill="#f0c794" rx="4"/>
+    <rect x="91" y="35" width="14" height="8" fill="#f0c794" rx="4"/>
+    <rect x="116" y="40" width="10" height="8" fill="#e6a068" rx="4"/>
+    <rect x="141" y="20" width="14" height="8" fill="#f0c794" rx="4"/>
+  </g>
+</svg>

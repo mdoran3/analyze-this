@@ -109,11 +109,11 @@ export default function AuthModal({ onClose, onSuccess }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 style={{ margin: '0 0 16px 0', color: '#1f2937' }}>
+        <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
           {mode === 'signin' ? '🔐 Sign In' : '✨ Create Account'}
         </h2>
         
-        <p style={{ color: '#6b7280', marginBottom: '24px' }}>
+        <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '24px' }}>
           {mode === 'signin' 
             ? 'Sign in to save your musical analysis'
             : 'Create an account to save and manage your projects'
@@ -127,7 +127,7 @@ export default function AuthModal({ onClose, onSuccess }) {
               <label style={{ 
                 display: 'block', 
                 marginBottom: '6px', 
-                color: '#374151',
+                color: 'var(--clr-neutral-a10)',
                 fontSize: '14px',
                 fontWeight: '500'
               }}>
@@ -140,10 +140,12 @@ export default function AuthModal({ onClose, onSuccess }) {
                 style={{
                   width: '100%',
                   padding: '10px',
-                  border: '1px solid #d1d5db',
+                  border: '1px solid var(--clr-surface-a30)',
                   borderRadius: '6px',
                   fontSize: '14px',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  background: 'var(--clr-surface-a0)',
+                  color: 'var(--clr-neutral-a0)'
                 }}
                 placeholder="Your first name"
                 required
