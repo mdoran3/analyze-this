@@ -664,7 +664,7 @@ self.onmessage = async (evt) => {
 
     if (msg.type === MSG.ANALYZE) {
       if (!e) throw new Error('Essentia not initialized')
-      const { sampleRate, pcm } = msg
+      const { sampleRate, pcm } = msg.payload
       try {
         const payload = await analyzeWithProgress(pcm, sampleRate)
         self.postMessage({ type: MSG.RESULT, payload })
