@@ -70,64 +70,53 @@ async function analyzeWithProgress(pcm, sampleRate) {
   return result
 }
 
-// --- Analysis using both KeyExtractor and RhythmExtractor ---
+// --- Legacy analyzeAudio function (now handled in analyzeWithProgress) ---
 function analyzeAudio(pcm, sampleRate) {
+  // This function is kept for compatibility but logic moved to analyzeWithProgress
+  // for better progress tracking
   const signal = e.arrayToVector(pcm)
   
-  // Key detection (always available)
   const keyResult = e.KeyExtractor(signal, sampleRate)
   const key = keyResult.key || 'C'
   const mode = keyResult.scale || 'major'
-  const keyConfidence = typeof keyResult.strength === 'number' ? keyResult.strength : 0
-  
-  // BPM detection with fallback
+  const keyConfidence = keyResult.strength || 0
+
   let bpm = 0
   let bpmConfidence = 0
   
-  console.log('Attempting BPM detection...')
-  console.log('RhythmExtractor available:', typeof e.RhythmExtractor === 'function')
-  
   try {
-    if (typeof e.RhythmExtractor === 'function') {
-      console.log('Using RhythmExtractor...')
-      const rhythmResult = e.RhythmExtractor(signal, sampleRate)
-      console.log('RhythmExtractor result:', rhythmResult)
-      bpm = rhythmResult.bpm || 0
-      bpmConfidence = typeof rhythmResult.confidence === 'number' ? rhythmResult.confidence : 0
-      console.log('Extracted BPM:', bpm, 'Confidence:', bpmConfidence)
-    } else {
-      console.warn('RhythmExtractor not available in this Essentia build')
-    }
+    const rhythmResult = e.RhythmExtractor2013(signal, sampleRate)
+    bpm = Math.round(rhythmResult.bpm || 0)
+    bpmConfidence = rhythmResult.confidence || 0
   } catch (error) {
-    console.warn('BPM detection failed, falling back to alternative method:', error.message || error)
-    
-    // Fallback: Simple onset-based BPM detection
     try {
-      console.log('Trying fallback BPM detection...')
-      const fallbackBpm = detectBpmFallback(pcm, sampleRate)
-      console.log('Fallback result:', fallbackBpm)
-      bpm = fallbackBpm.bpm
-      bpmConfidence = fallbackBpm.confidence
+      const fallbackResult = detectBpmFallback(pcm, sampleRate)
+      if (fallbackResult && typeof fallbackResult === 'object') {
+        bpm = fallbackResult.bpm || 0
+        bpmConfidence = fallbackResult.confidence || 0.7
+      } else {
+        bpm = fallbackResult || 0
+        bpmConfidence = 0.7
+      }
     } catch (fallbackError) {
-      console.warn('Fallback BPM detection also failed:', fallbackError.message || fallbackError)
       bpm = 0
       bpmConfidence = 0
     }
   }
-  
-  return { 
-    key, 
+
+  return {
+    key,
     mode, 
     keyConfidence,
-    bpm: Math.round(bpm), 
-    bpmConfidence 
+    bpm,
+    bpmConfidence
   }
 }
 
 // --- Fallback BPM detection using multiple methods ---
 function detectBpmFallback(pcm, sampleRate) {
   try {
-    console.log('Available Essentia functions:', Object.keys(e).filter(key => typeof e[key] === 'function').sort())
+    // Available Essentia functions logged for debugging
     
     // Method 1: Try BeatTracker algorithms
     const beatTrackers = [
@@ -140,11 +129,9 @@ function detectBpmFallback(pcm, sampleRate) {
     
     for (const tracker of beatTrackers) {
       if (typeof e[tracker] === 'function') {
-        console.log(`Trying ${tracker}...`)
         try {
           const signal = e.arrayToVector(pcm)
           const result = e[tracker](signal, sampleRate)
-          console.log(`${tracker} result:`, result)
           
           if (result && typeof result === 'object') {
             if (result.bpm && result.bpm > 60 && result.bpm < 200) {
@@ -160,18 +147,16 @@ function detectBpmFallback(pcm, sampleRate) {
             return { bpm: result, confidence: 0.6 }
           }
         } catch (err) {
-          console.warn(`${tracker} failed:`, err.message)
+          // BPM tracker failed, continue to next method
         }
       }
     }
     
     // Method 2: Try onset detection
     if (typeof e.OnsetDetection === 'function') {
-      console.log('Trying OnsetDetection...')
       try {
         const signal = e.arrayToVector(pcm)
         const onsets = e.OnsetDetection(signal, sampleRate)
-        console.log('OnsetDetection result:', onsets)
         
         if (onsets && onsets.length > 1) {
           const bpm = calculateBpmFromOnsets(onsets, sampleRate)
@@ -180,22 +165,19 @@ function detectBpmFallback(pcm, sampleRate) {
           }
         }
       } catch (err) {
-        console.warn('OnsetDetection failed:', err.message)
+        // OnsetDetection failed
       }
     }
     
     // Method 3: Simple autocorrelation-based detection
-    console.log('Trying simple autocorrelation...')
     const bpm = simpleAutocorrelationBpm(pcm, sampleRate)
     if (bpm > 60 && bpm < 200) {
       return { bpm, confidence: 0.4 }
     }
     
-    console.log('All fallback methods failed or returned invalid BPM')
     return { bpm: 0, confidence: 0 }
     
   } catch (error) {
-    console.warn('All fallback BPM methods failed:', error.message || error)
     return { bpm: 0, confidence: 0 }
   }
 }
@@ -268,7 +250,6 @@ function simpleAutocorrelationBpm(pcm, sampleRate) {
     
     return bestBpm
   } catch (error) {
-    console.warn('Simple autocorrelation failed:', error.message)
     return 0
   }
 }

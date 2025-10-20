@@ -17,7 +17,6 @@ class MidiPreviewPlayer {
       this.gainNode.gain.value = 0.3 // Set volume to 30%
       this.isInitialized = true
     } catch (error) {
-      console.error('Failed to initialize audio context:', error)
       throw error
     }
   }
@@ -112,7 +111,6 @@ class MidiPreviewPlayer {
     const notes = arpeggioData.notes || arpeggioData.pattern || []
     
     if (!notes || notes.length === 0) {
-      console.warn('No notes found in arpeggio data')
       return []
     }
     
@@ -145,8 +143,8 @@ class MidiPreviewPlayer {
         midiNote = noteData
         startTime = index * (beatDuration / 4) // Quarter note timing
       } else {
-        console.warn('Invalid note data:', noteData)
-        return // Skip invalid data
+        // Skip invalid note data
+        return
       }
       
       if (midiNote > 0) { // 0 = rest

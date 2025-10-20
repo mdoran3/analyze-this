@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../auth/AuthContext'
 
-export default function ProjectSidebar({ onProjectLoad, currentProject, refreshTrigger }) {
+export default function ProjectSidebar({ onProjectLoad, currentProject, refreshTrigger, onSignOut }) {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [collapsed, setCollapsed] = useState(false)
   const { user, isAuthenticated, signOut } = useAuth()
+  
+  // Use custom signOut handler if provided, otherwise use default
+  const handleSignOut = onSignOut || signOut
 
   const playClickSound = (isOpening) => {
     try {
@@ -17,10 +20,10 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
       const audio = new Audio(soundFile)
       audio.volume = 0.5 // Adjust volume as needed
       audio.play().catch(err => {
-        console.log('Audio play failed:', err) // Graceful fallback
+        // Audio play failed - graceful fallback
       })
     } catch (err) {
-      console.log('Audio loading failed:', err)
+      // Audio loading failed
     }
   }
 
@@ -49,14 +52,12 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
       const { data, error } = await db.getProjects()
       if (error) {
         setError('Failed to load projects')
-        console.error('Load projects error:', error)
       } else {
         setProjects(data || [])
       }
     } catch (err) {
       setError('Supabase not configured - running in demo mode')
       setProjects([])
-      console.error('Load projects error:', err)
     } finally {
       setLoading(false)
     }
@@ -77,13 +78,12 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
       const { error } = await db.deleteProject(projectId)
       if (error) {
         alert('Failed to delete project')
-        console.error('Delete project error:', error)
       } else {
+        // Update local state
         setProjects(projects.filter(p => p.id !== projectId))
       }
     } catch (err) {
       alert('Supabase not configured - cannot delete projects')
-      console.error('Delete project error:', err)
     }
   }
 
@@ -238,11 +238,11 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
               {user.email}
             </span>
             <button
-              onClick={signOut}
+              onClick={handleSignOut}
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--clr-neutral-a30)',
+                color: '#6b7280',
                 cursor: 'pointer',
                 fontSize: '11px',
                 textDecoration: 'underline'
@@ -392,11 +392,4 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
       `}</style>
     </div>
   )
-}
-
-// Add this function to your existing App.jsx to refresh projects list when a new project is saved
-export const refreshProjects = (setProjects) => {
-  db.getProjects().then(({ data }) => {
-    if (data) setProjects(data)
-  })
 }

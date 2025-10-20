@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import AuthModal from './AuthModal'
+import './SavePrompt.css'
 
 export default function SavePrompt({ analysisResults, onClose, onSaved }) {
   const [step, setStep] = useState('prompt') // 'prompt', 'naming', 'auth'
@@ -10,16 +11,15 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
   const { user, isAuthenticated } = useAuth()
 
   const handleSaveClick = () => {
-    // Always go to naming first, whether authenticated or not
     setStep('naming')
   }
 
-    const handleSave = async () => {
+  const handleSave = async () => {
     if (!projectName.trim()) return
-
+    
     // Check if user is authenticated before saving
     if (!isAuthenticated) {
-      // Store pending project data for email confirmation flow
+      // Store pending project data for after authentication
       localStorage.setItem('pendingProject', JSON.stringify({
         name: projectName.trim(),
         analysisResults: analysisResults,
@@ -29,7 +29,7 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
       setStep('auth')
       return
     }
-
+    
     setSaving(true)
     setError('')
 
@@ -40,16 +40,17 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
       const { data, error } = await db.createProject(projectName.trim(), analysisResults)
       
       if (error) {
-        console.error('Database error:', error)
         setError(error.message)
         return
       }
-
-      // Success!
-      onSaved(data)
+      
+      // Call onSaved if provided
+      if (onSaved) {
+        onSaved(data)
+      }
+      
       onClose()
     } catch (err) {
-      console.error('Save project error:', err)
       setError('Failed to save project: ' + err.message)
     } finally {
       setSaving(false)
@@ -57,100 +58,66 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
   }
 
   const handleAuthSuccess = () => {
-    // Store pending project data in case user needs to confirm email
-    if (projectName.trim() && analysisResults) {
-      localStorage.setItem('pendingProject', JSON.stringify({
-        name: projectName.trim(),
-        analysisResults: analysisResults,
-        timestamp: Date.now()
-      }))
-    }
-    
-    // Simply return to the naming step
-    // The user can now click the save button manually
+    // After successful authentication, go back to naming step
+    // User can then click Create Project again to save
     setStep('naming')
-    
-    // Clear any previous errors
     setError('')
   }
 
-  if (!analysisResults) return null
+  // Close the save prompt if user signs out (but only if they were previously signed in)
+  // Track if user was previously authenticated to avoid closing on normal flow
+  const wasAuthenticatedRef = React.useRef(false)
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      wasAuthenticatedRef.current = true
+    }
+  }, [isAuthenticated])
 
+  React.useEffect(() => {
+    // Only close if user was previously authenticated and then becomes unauthenticated
+    // This prevents closing during normal flow for non-authenticated users
+    if (!user && isAuthenticated === false && wasAuthenticatedRef.current) {
+      onClose()
+    }
+  }, [isAuthenticated, user, onClose])
+
+  if (!analysisResults) return null;
+  
   return (
-    <div style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div style={{
-        background: 'white',
-        borderRadius: '12px',
-        padding: '24px',
-        maxWidth: '400px',
-        width: '90%',
-        maxHeight: '80vh',
-        overflow: 'auto',
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
-      }}>
+    <div className="modal-overlay">
+      <div className="modal-content">
         
         {step === 'prompt' && (
           <>
-            <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
+            <h2 className="modal-title">
               🎵 Analysis Complete!
             </h2>
-            <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '24px' }}>
+            <p className="modal-text">
               Great! We've analyzed your track and found:
             </p>
             
-            <div style={{
-              background: 'var(--clr-surface-tonal-a20)',
-              padding: '16px',
-              borderRadius: '8px',
-              marginBottom: '24px',
-              color: 'var(--clr-neutral-a0)'
-            }}>
-              <div style={{ marginBottom: '8px' }}>
+            <div className="analysis-results">
+              <div className="result-item">
                 <strong>Key:</strong> {analysisResults.key} {analysisResults.mode}
               </div>
               {analysisResults.bpm > 0 && (
-                <div>
+                <div className="result-item">
                   <strong>BPM:</strong> {analysisResults.bpm}
                 </div>
               )}
             </div>
 
-            <p style={{ color: 'var(--clr-neutral-a10)', marginBottom: '24px' }}>
+            <p className="modal-text">
               Would you like to save this analysis and generated MIDI files to your account?
             </p>
 
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-              <button
-                onClick={onClose}
-                className="secondary"
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
-              >
+            <div className="modal-actions">
+              <button onClick={onClose} className="btn btn-secondary">
                 Not Now
               </button>
-              <button
-                onClick={handleSaveClick}
-                className="primary"
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '500'
-                }}
+              <button 
+                onClick={handleSaveClick} 
+                className="btn btn-primary"
               >
                 Yes, Save It!
               </button>
@@ -160,23 +127,15 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
 
         {step === 'naming' && (
           <>
-            <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
+            <h2 className="modal-title">
               Name Your Project
             </h2>
-            <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '16px' }}>
+            <p className="modal-text">
               Give your musical analysis a memorable name{!isAuthenticated ? ' (you\'ll need to sign in to save)' : ' and save it to your account'}:
             </p>
             
             {!isAuthenticated && (
-              <div style={{
-                background: 'var(--clr-warning-a60)',
-                border: '1px solid var(--clr-warning-a20)',
-                color: 'var(--clr-warning-a0)',
-                padding: '8px 12px',
-                borderRadius: '6px',
-                fontSize: '14px',
-                marginBottom: '16px'
-              }}>
+              <div className="auth-warning">
                 ⚠️ You'll need to sign in or create an account to save this project
               </div>
             )}
@@ -187,51 +146,28 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
               onChange={(e) => setProjectName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSave()}
               placeholder="e.g., My Awesome Song Analysis"
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '1px solid var(--clr-surface-a30)',
-                borderRadius: '6px',
-                fontSize: '14px',
-                marginBottom: '16px',
-                boxSizing: 'border-box',
-                background: 'var(--clr-surface-a0)',
-                color: 'var(--clr-neutral-a0)'
-              }}
+              className="modal-input"
               autoFocus
             />
 
             {error && (
-              <p style={{ color: 'var(--clr-danger-a0)', fontSize: '14px', marginBottom: '16px' }}>
+              <p className="error-message">
                 {error}
               </p>
             )}
 
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            <div className="modal-actions">
               <button
                 onClick={() => setStep('prompt')}
                 disabled={saving}
-                className="secondary"
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: saving ? 'not-allowed' : 'pointer',
-                  opacity: saving ? 0.5 : 1
-                }}
+                className="btn btn-secondary"
               >
                 Back
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving || !projectName.trim()}
-                className="success"
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  cursor: (saving || !projectName.trim()) ? 'not-allowed' : 'pointer',
-                  fontWeight: '500',
-                  opacity: (saving || !projectName.trim()) ? 0.5 : 1
-                }}
+                className="btn btn-success"
               >
                 {saving ? 'Saving...' : (isAuthenticated ? 'Create Project' : 'Continue to Sign In')}
               </button>
@@ -241,11 +177,12 @@ export default function SavePrompt({ analysisResults, onClose, onSaved }) {
 
         {step === 'auth' && (
           <AuthModal
-            onClose={() => setStep('prompt')}
+            onClose={() => setStep('naming')}
             onSuccess={handleAuthSuccess}
           />
         )}
+        
       </div>
     </div>
-  )
+  );
 }

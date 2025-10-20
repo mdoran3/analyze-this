@@ -7,7 +7,6 @@ export default function AuthModal({ onClose, onSuccess }) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [firstName, setFirstName] = useState('')
-  const [username, setUsername] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { signIn, signUp } = useAuth()
@@ -26,20 +25,14 @@ export default function AuthModal({ onClose, onSuccess }) {
 
     // Additional validation only for signup
     if (mode === 'signup') {
-      if (!firstName?.trim() || !username?.trim()) {
-        setError('Please fill in first name and username')
+      if (!firstName?.trim()) {
+        setError('Please fill in your first name')
         setLoading(false)
         return
       }
       
       if (password !== confirmPassword) {
         setError('Passwords do not match')
-        setLoading(false)
-        return
-      }
-      
-      if (username.trim().length < 3) {
-        setError('Username must be at least 3 characters')
         setLoading(false)
         return
       }
@@ -56,7 +49,7 @@ export default function AuthModal({ onClose, onSuccess }) {
       if (mode === 'signin') {
         result = await signIn(email, password)
       } else {
-        result = await signUp(email, password, { firstName, username })
+        result = await signUp(email, password, { firstName })
       }
 
       if (result.error) {
@@ -98,22 +91,23 @@ export default function AuthModal({ onClose, onSuccess }) {
     >
       <div 
         style={{
-          background: 'white',
+          background: 'var(--clr-surface-a10)',
           borderRadius: '12px',
           padding: '24px',
           maxWidth: '400px',
           width: '90%',
           maxHeight: '80vh',
           overflow: 'auto',
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.3)',
+          border: '1px solid var(--clr-surface-a30)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-neutral-a0)' }}>
+        <h2 style={{ margin: '0 0 16px 0', color: 'var(--clr-light-a0)' }}>
           {mode === 'signin' ? '🔐 Sign In' : '✨ Create Account'}
         </h2>
         
-        <p style={{ color: 'var(--clr-neutral-a30)', marginBottom: '24px' }}>
+        <p style={{ color: 'var(--clr-surface-a50)', marginBottom: '24px' }}>
           {mode === 'signin' 
             ? 'Sign in to save your musical analysis'
             : 'Create an account to save and manage your projects'
@@ -127,7 +121,7 @@ export default function AuthModal({ onClose, onSuccess }) {
               <label style={{ 
                 display: 'block', 
                 marginBottom: '6px', 
-                color: 'var(--clr-neutral-a10)',
+                color: 'var(--clr-light-a0)',
                 fontSize: '14px',
                 fontWeight: '500'
               }}>
@@ -144,37 +138,10 @@ export default function AuthModal({ onClose, onSuccess }) {
                   borderRadius: '6px',
                   fontSize: '14px',
                   boxSizing: 'border-box',
-                  background: 'var(--clr-surface-a0)',
-                  color: 'var(--clr-neutral-a0)'
+                  background: 'var(--clr-surface-a20)',
+                  color: 'var(--clr-light-a0)'
                 }}
                 placeholder="Your first name"
-                required
-              />
-            </div>
-
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{ 
-                display: 'block', 
-                marginBottom: '6px', 
-                color: '#374151',
-                fontSize: '14px',
-                fontWeight: '500'
-              }}>
-                Username
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  boxSizing: 'border-box'
-                }}
-                placeholder="Choose a username"
                 required
               />
             </div>
@@ -185,7 +152,7 @@ export default function AuthModal({ onClose, onSuccess }) {
           <label style={{ 
             display: 'block', 
             marginBottom: '6px', 
-            color: '#374151',
+            color: 'var(--clr-light-a0)',
             fontSize: '14px',
             fontWeight: '500'
           }}>
@@ -198,10 +165,12 @@ export default function AuthModal({ onClose, onSuccess }) {
             style={{
               width: '100%',
               padding: '10px',
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--clr-surface-a30)',
               borderRadius: '6px',
               fontSize: '14px',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              background: 'var(--clr-surface-a20)',
+              color: 'var(--clr-light-a0)'
             }}
             required
           />
@@ -211,7 +180,7 @@ export default function AuthModal({ onClose, onSuccess }) {
           <label style={{ 
             display: 'block', 
             marginBottom: '6px', 
-            color: '#374151',
+            color: 'var(--clr-light-a0)',
             fontSize: '14px',
             fontWeight: '500'
           }}>
@@ -224,10 +193,12 @@ export default function AuthModal({ onClose, onSuccess }) {
             style={{
               width: '100%',
               padding: '10px',
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--clr-surface-a30)',
               borderRadius: '6px',
               fontSize: '14px',
-              boxSizing: 'border-box'
+              boxSizing: 'border-box',
+              background: 'var(--clr-surface-a20)',
+              color: 'var(--clr-light-a0)'
             }}
             required
           />
@@ -238,7 +209,7 @@ export default function AuthModal({ onClose, onSuccess }) {
             <label style={{ 
               display: 'block', 
               marginBottom: '6px', 
-              color: '#374151',
+              color: 'var(--clr-light-a0)',
               fontSize: '14px',
               fontWeight: '500'
             }}>
@@ -251,10 +222,12 @@ export default function AuthModal({ onClose, onSuccess }) {
               style={{
                 width: '100%',
                 padding: '10px',
-                border: '1px solid #d1d5db',
+                border: '1px solid var(--clr-surface-a30)',
                 borderRadius: '6px',
                 fontSize: '14px',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                background: 'var(--clr-surface-a20)',
+                color: 'var(--clr-light-a0)'
               }}
               required
             />
@@ -263,9 +236,9 @@ export default function AuthModal({ onClose, onSuccess }) {
 
         {error && (
           <div style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            color: '#dc2626',
+            background: 'var(--clr-danger-a20)',
+            border: '1px solid var(--clr-danger-a10)',
+            color: 'var(--clr-danger-a0)',
             padding: '12px',
             borderRadius: '6px',
             fontSize: '14px',
@@ -281,15 +254,26 @@ export default function AuthModal({ onClose, onSuccess }) {
           style={{
             width: '100%',
             padding: '12px',
-            background: '#3b82f6',
-            color: 'white',
+            background: 'var(--clr-primary-a0)',
+            color: 'var(--clr-light-a0)',
             border: 'none',
             borderRadius: '6px',
             fontSize: '14px',
             fontWeight: '500',
             cursor: loading ? 'not-allowed' : 'pointer',
             opacity: loading ? 0.5 : 1,
-            marginBottom: '16px'
+            marginBottom: '16px',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) {
+              e.target.style.background = 'var(--clr-primary-a10)'
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!loading) {
+              e.target.style.background = 'var(--clr-primary-a0)'
+            }
           }}
         >
           {loading ? 'Please wait...' : (mode === 'signin' ? 'Sign In' : 'Create Account')}
@@ -305,12 +289,11 @@ export default function AuthModal({ onClose, onSuccess }) {
             setPassword('')
             setConfirmPassword('')
             setFirstName('')
-            setUsername('')
           }}
           style={{
             background: 'none',
             border: 'none',
-            color: '#3b82f6',
+            color: 'var(--clr-primary-a30)',
             cursor: 'pointer',
             fontSize: '14px',
             textDecoration: 'underline'
@@ -329,7 +312,7 @@ export default function AuthModal({ onClose, onSuccess }) {
             style={{
               background: 'none',
               border: 'none',
-              color: '#6b7280',
+              color: 'var(--clr-surface-a50)',
               cursor: 'pointer',
               fontSize: '14px'
             }}

@@ -2,6 +2,46 @@ import React, { useState } from 'react'
 import { generateMidiForKey, downloadMidiFile } from '../utils/midi'
 import MidiPreviewPlayer from '../utils/midiPlayer'
 
+// Typewriter effect component
+function TypewriterText({ text, speed = 100, delay = 0 }) {
+  const [displayText, setDisplayText] = useState('')
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (currentIndex < text.length) {
+        setDisplayText(prev => prev + text[currentIndex])
+        setCurrentIndex(prev => prev + 1)
+      }
+    }, currentIndex === 0 ? delay : speed)
+
+    return () => clearTimeout(timer)
+  }, [currentIndex, text, speed, delay])
+
+  // Reset when text changes
+  React.useEffect(() => {
+    setDisplayText('')
+    setCurrentIndex(0)
+  }, [text])
+
+  return (
+    <span style={{ 
+      color: 'var(--clr-primary-a30)', 
+      fontSize: '14px',
+      fontStyle: 'italic',
+      opacity: 0.9
+    }}>
+      {displayText}
+      {currentIndex < text.length && (
+        <span style={{ 
+          animation: 'blink 1s infinite',
+          marginLeft: '1px'
+        }}>|</span>
+      )}
+    </span>
+  )
+}
+
 export default function MidiExport({ keyName, mode, bpm }) {
   const [expanded, setExpanded] = useState(false)
   const [midiData, setMidiData] = useState(null)
@@ -64,9 +104,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
         setPlaying(null)
       }, type === 'scale' ? 4000 : type === 'progression' ? 6000 : type === 'arpeggio' ? 6000 : 2500)
 
-    } catch (error) {
-      console.error('Failed to play preview:', error)
-      setPlaying(null)
+        } catch (error) {
+      setError('Audio preview failed')
     }
   }
 
@@ -93,12 +132,21 @@ export default function MidiExport({ keyName, mode, bpm }) {
   
   return (
     <div style={{
-      border: '1px solid var(--clr-surface-a20)',
+      background: 'var(--clr-surface-a10)',
+      border: '1px solid var(--clr-surface-a30)',
       borderRadius: '8px',
       padding: '16px',
-      background: 'var(--clr-surface-tonal-a20)',
+      marginTop: '16px',
       minWidth: '300px'
     }}>
+      <style>
+        {`
+          @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+          }
+        `}
+      </style>
       <div 
         style={{ 
           display: 'flex', 
@@ -108,23 +156,32 @@ export default function MidiExport({ keyName, mode, bpm }) {
         }}
         onClick={() => setExpanded(!expanded)}
       >
-                <h3 style={{ margin: 0, color: 'var(--clr-neutral-a0)' }}>
-          � MIDI Export ({keyName} {mode})
-        </h3>
-        <span style={{ color: 'var(--clr-neutral-a30)' }}>{expanded ? '▼' : '▶'}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <h3 style={{ margin: 0, color: 'var(--clr-light-a0)' }}>
+            🎵 MIDI Export ({keyName} {mode})
+          </h3>
+          {!expanded && (
+            <TypewriterText 
+              text="expand to see some ideas" 
+              speed={80} 
+              delay={500}
+            />
+          )}
+        </div>
+        <span style={{ color: 'var(--clr-surface-a50)' }}>{expanded ? '▼' : '▶'}</span>
       </div>
       
       {expanded && (
         <div style={{ marginTop: '16px' }}>
           {/* Scale */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ margin: '0 0 8px 0', color: '#4b5563' }}>
+            <h4 style={{ margin: '0 0 8px 0', color: 'var(--clr-light-a0)' }}>
               Scale: {keyName} {mode}
             </h4>
             <p style={{ 
               margin: '0 0 12px 0', 
               fontSize: '13px', 
-              color: '#6b7280',
+              color: 'var(--clr-surface-a50)',
               lineHeight: '1.4'
             }}>
               The complete {mode} scale in {keyName}, spanning two octaves. Perfect for melodic composition, 
@@ -136,11 +193,12 @@ export default function MidiExport({ keyName, mode, bpm }) {
               gap: '4px', 
               marginBottom: '8px',
               fontSize: '12px',
-              color: '#6b7280'
+              color: 'var(--clr-surface-a50)'
             }}>
               {midiData.scale.notes.slice(0, 8).map((note, index) => (
                 <span key={index} style={{
-                  background: '#e5e7eb',
+                  background: 'var(--clr-surface-a30)',
+                  color: 'var(--clr-light-a0)',
                   padding: '2px 6px',
                   borderRadius: '4px'
                 }}>
@@ -153,8 +211,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                 onClick={() => handlePlay('scale', midiData.scale, 'scale')}
                 disabled={playing === 'scale'}
                 style={{
-                  background: playing === 'scale' ? '#ef4444' : '#10b981',
-                  color: 'white',
+                  background: playing === 'scale' ? 'var(--clr-danger-a0)' : 'var(--clr-success-a0)',
+                  color: 'var(--clr-light-a0)',
                   border: 'none',
                   padding: '6px 12px',
                   borderRadius: '4px',
@@ -171,8 +229,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
               <button
                 onClick={() => handleDownload(midiData.scale.midiData, `${keyName}_${mode}_scale.mid`)}
                 style={{
-                  background: '#3b82f6',
-                  color: 'white',
+                  background: 'var(--clr-primary-a0)',
+                  color: 'var(--clr-light-a0)',
                   border: 'none',
                   padding: '6px 12px',
                   borderRadius: '4px',
@@ -187,11 +245,11 @@ export default function MidiExport({ keyName, mode, bpm }) {
           
           {/* Chords */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ margin: '0 0 8px 0', color: '#4b5563' }}>Chords</h4>
+            <h4 style={{ margin: '0 0 8px 0', color: 'var(--clr-light-a0)' }}>Chords</h4>
             <p style={{ 
               margin: '0 0 12px 0', 
               fontSize: '13px', 
-              color: '#6b7280',
+              color: 'var(--clr-surface-a50)',
               lineHeight: '1.4'
             }}>
               Essential triads and seventh chords built from the {keyName} {mode} scale. 
@@ -200,16 +258,16 @@ export default function MidiExport({ keyName, mode, bpm }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '8px' }}>
               {midiData.chords.map((chord, index) => (
                 <div key={index} style={{
-                  background: 'white',
-                  border: '1px solid #d1d5db',
+                  background: 'var(--clr-surface-a30)',
+                  border: '1px solid var(--clr-surface-a40)',
                   borderRadius: '4px',
                   padding: '8px',
                   textAlign: 'center'
                 }}>
-                  <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '14px' }}>
+                  <div style={{ fontWeight: 'bold', marginBottom: '4px', fontSize: '14px', color: 'var(--clr-light-a0)' }}>
                     {chord.name}
                   </div>
-                  <div style={{ fontSize: '10px', color: '#6b7280', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--clr-surface-a50)', marginBottom: '6px' }}>
                     {chord.notes.map(note => midiToNoteName(note)).join('-')}
                   </div>
                   <div style={{ display: 'flex', gap: '4px' }}>
@@ -217,8 +275,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                       onClick={() => handlePlay('chord', chord, `chord-${index}`)}
                       disabled={playing === `chord-${index}`}
                       style={{
-                        background: playing === `chord-${index}` ? '#ef4444' : '#10b981',
-                        color: 'white',
+                        background: playing === `chord-${index}` ? 'var(--clr-danger-a0)' : 'var(--clr-success-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '3px 6px',
                         borderRadius: '3px',
@@ -231,8 +289,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                     <button
                       onClick={() => handleDownload(chord.midiData, `${keyName}_${mode}_${chord.name.replace(/[°#]/g, '')}.mid`)}
                       style={{
-                        background: '#3b82f6',
-                        color: 'white',
+                        background: 'var(--clr-primary-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '3px 6px',
                         borderRadius: '3px',
@@ -250,11 +308,11 @@ export default function MidiExport({ keyName, mode, bpm }) {
           
           {/* Common Progressions */}
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ margin: '0 0 8px 0', color: '#4b5563' }}>Common Progressions</h4>
+            <h4 style={{ margin: '0 0 8px 0', color: 'var(--clr-light-a0)' }}>Common Progressions</h4>
             <p style={{ 
               margin: '0 0 12px 0', 
               fontSize: '13px', 
-              color: '#6b7280',
+              color: 'var(--clr-surface-a50)',
               lineHeight: '1.4'
             }}>
               Popular chord progressions in {keyName} {mode}, including classics like vi-IV-I-V and ii-V-I. 
@@ -264,8 +322,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {midiData.progressions.map((progression, index) => (
                 <div key={index} style={{
-                  background: 'white',
-                  border: '1px solid #d1d5db',
+                  background: 'var(--clr-surface-a30)',
+                  border: '1px solid var(--clr-surface-a40)',
                   borderRadius: '4px',
                   padding: '12px',
                   display: 'flex',
@@ -273,10 +331,10 @@ export default function MidiExport({ keyName, mode, bpm }) {
                   alignItems: 'center'
                 }}>
                   <div>
-                    <div style={{ fontWeight: 'bold', marginBottom: '2px' }}>
+                    <div style={{ fontWeight: 'bold', marginBottom: '2px', color: 'var(--clr-light-a0)' }}>
                       {progression.name}
                     </div>
-                    <div style={{ fontSize: '12px', color: '#6b7280' }}>
+                    <div style={{ fontSize: '12px', color: 'var(--clr-surface-a50)' }}>
                       {progression.chords.map(chord => chord.name).join(' - ')}
                     </div>
                   </div>
@@ -285,8 +343,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                       onClick={() => handlePlay('progression', progression, `progression-${index}`)}
                       disabled={playing === `progression-${index}`}
                       style={{
-                        background: playing === `progression-${index}` ? '#ef4444' : '#10b981',
-                        color: 'white',
+                        background: playing === `progression-${index}` ? 'var(--clr-danger-a0)' : 'var(--clr-success-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '6px 12px',
                         borderRadius: '4px',
@@ -299,8 +357,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                     <button
                       onClick={() => handleDownload(progression.midiData, `${keyName}_${mode}_${progression.name.replace(/[^a-zA-Z0-9]/g, '_')}.mid`)}
                       style={{
-                        background: '#8b5cf6',
-                        color: 'white',
+                        background: 'var(--clr-primary-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '6px 12px',
                         borderRadius: '4px',
@@ -318,11 +376,11 @@ export default function MidiExport({ keyName, mode, bpm }) {
           
           {/* Arpeggiated Grooves */}
           <div>
-            <h4 style={{ margin: '0 0 8px 0', color: '#4b5563' }}>🎼 Arpeggiated Grooves</h4>
+            <h4 style={{ margin: '0 0 8px 0', color: 'var(--clr-light-a0)' }}>🎼 Arpeggiated Grooves</h4>
             <p style={{ 
               margin: '0 0 12px 0', 
               fontSize: '13px', 
-              color: '#6b7280',
+              color: 'var(--clr-surface-a50)',
               lineHeight: '1.4'
             }}>
               Rhythmic arpeggiated patterns synchronized to your track's {midiData?.bpm || 'detected'} BPM. 
@@ -332,8 +390,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '300px', overflowY: 'auto' }}>
               {midiData.arpeggios && midiData.arpeggios.map((arpeggio, index) => (
                 <div key={index} style={{
-                  background: 'white',
-                  border: '1px solid #d1d5db',
+                  background: 'var(--clr-surface-a30)',
+                  border: '1px solid var(--clr-surface-a40)',
                   borderRadius: '4px',
                   padding: '10px',
                   display: 'flex',
@@ -341,10 +399,10 @@ export default function MidiExport({ keyName, mode, bpm }) {
                   alignItems: 'center'
                 }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 'bold', marginBottom: '2px', fontSize: '13px' }}>
+                    <div style={{ fontWeight: 'bold', marginBottom: '2px', fontSize: '13px', color: 'var(--clr-light-a0)' }}>
                       {arpeggio.name}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#6b7280' }}>
+                    <div style={{ fontSize: '11px', color: 'var(--clr-surface-a50)' }}>
                       {arpeggio.description}
                     </div>
                   </div>
@@ -353,8 +411,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                       onClick={() => handlePlay('arpeggio', arpeggio, `arpeggio-${index}`)}
                       disabled={playing === `arpeggio-${index}`}
                       style={{
-                        background: playing === `arpeggio-${index}` ? '#ef4444' : '#10b981',
-                        color: 'white',
+                        background: playing === `arpeggio-${index}` ? 'var(--clr-danger-a0)' : 'var(--clr-success-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '4px 8px',
                         borderRadius: '3px',
@@ -367,8 +425,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
                     <button
                       onClick={() => handleDownload(arpeggio.midiData, `${keyName}_${mode}_${arpeggio.name.replace(/[^a-zA-Z0-9]/g, '_')}.mid`)}
                       style={{
-                        background: '#f59e0b',
-                        color: 'white',
+                        background: 'var(--clr-primary-a0)',
+                        color: 'var(--clr-light-a0)',
                         border: 'none',
                         padding: '4px 8px',
                         borderRadius: '3px',

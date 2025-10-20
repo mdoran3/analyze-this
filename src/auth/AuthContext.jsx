@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
         const { data: { session }, error } = await auth.getSession()
         
         if (error) {
-          console.warn('Auth session check failed:', error.message)
+          // Auth session check failed
         }
         
         // Set user from session if available
@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }) => {
         
         setLoading(false)
       } catch (error) {
-        console.warn('Auth initialization failed (Supabase not configured):', error.message)
         setUser(null)
         setLoading(false)
       }
@@ -67,14 +66,12 @@ export const AuthProvider = ({ children }) => {
                     const { db } = await import('../api/supabase')
                     const { data, error } = await db.createProject(name, analysisResults)
                     
-                    if (error) {
-                      console.error('Failed to auto-save pending project:', error)
-                    } else {
+                    if (!error) {
                       // Trigger a custom event to notify the app
                       window.dispatchEvent(new CustomEvent('projectAutoSaved', { detail: data }))
                     }
                   } catch (err) {
-                    console.error('Error auto-saving project:', err)
+                    // Auto-save failed - silent fallback
                   }
                 }, 1000)
               }
@@ -82,7 +79,6 @@ export const AuthProvider = ({ children }) => {
               // Clean up stored data
               localStorage.removeItem('pendingProject')
             } catch (err) {
-              console.error('Error processing pending project:', err)
               localStorage.removeItem('pendingProject')
             }
           }
@@ -91,7 +87,6 @@ export const AuthProvider = ({ children }) => {
 
       return () => subscription.unsubscribe()
     } catch (error) {
-      console.warn('Auth state change listener failed (Supabase not configured):', error.message)
       setLoading(false)
     }
   }, [])

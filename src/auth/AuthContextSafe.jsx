@@ -16,26 +16,19 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    // Simplified initialization that won't crash
-    console.log('AuthProvider initializing...')
-    
     try {
       // Try to import and use Supabase
       import('../api/supabase').then(({ auth }) => {
-        console.log('Supabase auth imported successfully')
         return auth.getCurrentUser()
       }).then(({ data }) => {
-        console.log('Got current user:', data)
         setUser(data?.user || null)
         setLoading(false)
       }).catch((error) => {
-        console.warn('Auth initialization failed:', error.message)
         setError('Supabase not configured - running in demo mode')
         setUser(null)
         setLoading(false)
       })
     } catch (error) {
-      console.warn('Failed to load Supabase:', error.message)
       setError('Supabase not configured - running in demo mode')
       setUser(null)
       setLoading(false)
@@ -80,8 +73,6 @@ export const AuthProvider = ({ children }) => {
     signIn,
     signOut
   }
-
-  console.log('AuthProvider rendering with value:', value)
 
   return (
     <AuthContext.Provider value={value}>
