@@ -17,17 +17,18 @@ export default function Dropper({ onFile }) {
   return (
     <div
       {...getRootProps()}
+      className="dropper-responsive"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        border: `3px dashed ${isDragActive ? 'var(--clr-primary-a0)' : 'transparent'}`, 
-        borderRadius: '24px', 
+        border: `3px dashed ${isDragActive ? 'var(--clr-primary-a0)' : 'transparent'}`,
+        borderRadius: '24px',
         padding: 32,
-        textAlign: 'center', 
-        cursor: 'pointer', 
+        textAlign: 'center',
+        cursor: 'pointer',
         background: isDragActive ? 'rgba(213, 93, 32, 0.15)' : isHovered ? 'rgba(213, 93, 32, 0.05)' : 'transparent',
         transition: 'all 0.3s ease',
-        boxShadow: isDragActive ? '0 12px 32px rgba(213, 93, 32, 0.4), inset 0 4px 8px rgba(213, 93, 32, 0.2)' : 
+        boxShadow: isDragActive ? '0 12px 32px rgba(213, 93, 32, 0.4), inset 0 4px 8px rgba(213, 93, 32, 0.2)' :
                    isHovered ? '0 8px 24px rgba(0, 0, 0, 0.8), 0 4px 12px rgba(213, 93, 32, 0.3)' : 'none',
         transform: isHovered && !isDragActive ? 'translateY(-2px) scale(1.02)' : isDragActive ? 'scale(0.98)' : 'scale(1)',
         width: '100%',
@@ -48,7 +49,7 @@ export default function Dropper({ onFile }) {
           boxShadow: '0 8px 24px rgba(213, 93, 32, 0.5)',
           backdropFilter: 'blur(8px)'
         }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
+          <div className="dropper-icon" style={{ fontSize: '48px', marginBottom: '16px' }}>📁</div>
           <p style={{ color: 'var(--clr-primary-a0)', fontWeight: 600, fontSize: '18px', margin: 0 }}>
             Drop it right here!
           </p>

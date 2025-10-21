@@ -5,7 +5,7 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(true)
   const { user, isAuthenticated, signOut } = useAuth()
   
   // Use custom signOut handler if provided, otherwise use default

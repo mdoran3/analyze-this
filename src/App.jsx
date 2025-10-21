@@ -8,6 +8,9 @@ import ProjectSidebar from './components/ProjectSidebar'
 import AuthModal from './components/AuthModal'
 import { decodeToMonoPCM } from './utils/audio'
 import { MSG } from './engine/messages'
+import './header-mobile.css'
+import './dropper-mobile.css'
+import './header-responsive.css'
 import { useAuth } from './auth/AuthContext'
 
 export default function App() {
@@ -417,22 +420,8 @@ export default function App() {
                   alignItems: 'center'
                 }}>
                   <div style={{ position: 'relative' }}>
-                    <div style={{
-                      display: 'inline-block',
-                      borderRadius: '24px',
-                      padding: '20px',
-                      background: 'var(--clr-surface-a20)',
-                      boxShadow: '0 8px 24px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(213, 93, 32, 0.2)',
-                      border: '2px solid var(--clr-surface-a30)',
-                      transition: 'all 0.3s ease',
-                      cursor: 'pointer'
-                    }}>
-                      <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" style={{ 
-                        height: '480px', 
-                        width: 'auto', 
-                        borderRadius: '16px',
-                        display: 'block'
-                      }} />
+                    <div className="dropper-logo-container">
+                      <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" className="dropper-logo-img" />
                     </div>
                     <div style={{ 
                       position: 'absolute', 
@@ -877,7 +866,6 @@ function AuthHeader({ onSignOut, onLogoClick }) {
       // After 10 seconds, start the fade transition
       setTimeout(() => {
         setIsGlitching(true)
-        
         // After fade out (0.5s), change text and fade in
         setTimeout(() => {
           setCurrentTextIndex((prev) => (prev + 1) % bannerTexts.length)
@@ -886,295 +874,84 @@ function AuthHeader({ onSignOut, onLogoClick }) {
         }, 1000)
       }, 6000) // Wait 10 seconds for light sweep to complete
     }
-
     // Start the first cycle immediately
     startCycle()
-    
     // Then repeat every 11 seconds
     const interval = setInterval(startCycle, 6000)
-
     return () => clearInterval(interval)
   }, [])
 
-  // Reset auth modal when user signs out
-  React.useEffect(() => {
-    if (!user) {
-      setShowAuthModal(false)
-    }
-  }, [user])
-
   if (loading) {
     return (
-      <header style={{ 
-        width: '100vw',
-        height: '100px',
-        margin: 0,
-        padding: '16px 24px', 
-        borderBottom: '1px solid var(--clr-surface-a30)', 
-        background: '#000000',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
-        boxSizing: 'border-box'
-      }}>
-        <button
-          onClick={(e) => {
-            // Play click sound
-            try {
-              const audio = new Audio('/sounds/hsb_kit2_click.wav')
-              audio.volume = 0.5
-              audio.play().catch(err => {
-                // Silently ignore audio errors
-              })
-            } catch (err) {
-              // Silently ignore audio errors
-            }
-            onLogoClick(e)
-          }}
-          style={{
-            background: 'linear-gradient(145deg, #1a1a1a, #0d0d0d)',
-            border: '2px solid var(--clr-surface-a40)',
-            borderRadius: '12px',
-            padding: '6px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            boxShadow: `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `,
-            transition: 'all 0.15s ease',
-            transform: 'translateY(0px)',
-            outline: 'none'
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translateY(4px)'
-            e.currentTarget.style.border = '3px solid var(--clr-surface-a50)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #0d0d0d, #1a1a1a)'
-            e.currentTarget.style.boxShadow = `
-              0 1px 3px rgba(0, 0, 0, 0.8),
-              inset 0 4px 8px rgba(0, 0, 0, 0.6),
-              inset 0 2px 4px rgba(0, 0, 0, 0.4)
-            `
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)'
-            e.currentTarget.style.border = '2px solid var(--clr-surface-a40)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #1a1a1a, #0d0d0d)'
-            e.currentTarget.style.boxShadow = `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)'
-            e.currentTarget.style.border = '2px solid var(--clr-surface-a40)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #1a1a1a, #0d0d0d)'
-            e.currentTarget.style.boxShadow = `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `
-          }}
-        >
-          <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" style={{ height: '64px', width: 'auto' }} />
-        </button>
-        <div style={{ fontSize: '14px', color: 'var(--clr-surface-a50)' }}>Loading...</div>
+      <header className="main-header">
+        <div className="header-row">
+          <div className="header-logo">
+            <button onClick={onLogoClick} className="logo-btn">
+              <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" />
+            </button>
+          </div>
+          <div className="header-banner">
+            <div className="banner-text-container">
+              <span className="banner-text">Loading...</span>
+            </div>
+          </div>
+          <div className="header-actions"></div>
+        </div>
       </header>
     )
   }
 
   return (
     <>
-      <header style={{ 
-        width: '100vw',
-        height: '100px',
-        margin: 0,
-        padding: '16px 24px', 
-        borderBottom: '1px solid var(--clr-surface-a30)', 
-        background: '#000000',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
-        boxSizing: 'border-box',
-        position: 'relative'
-      }}>
-        <button
-          onClick={(e) => {
-            // Play click sound
-            try {
-              const audio = new Audio('/sounds/hsb_kit2_click.wav')
-              audio.volume = 0.5
-              audio.play().catch(err => {
-                // Silently ignore audio errors
-              })
-            } catch (err) {
-              // Silently ignore audio errors
-            }
-            onLogoClick(e)
-          }}
-          style={{
-            background: 'linear-gradient(145deg, #1a1a1a, #0d0d0d)',
-            border: '2px solid var(--clr-surface-a40)',
-            borderRadius: '12px',
-            padding: '6px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            boxShadow: `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `,
-            transition: 'all 0.15s ease',
-            transform: 'translateY(0px)',
-            outline: 'none'
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translateY(4px)'
-            e.currentTarget.style.border = '3px solid var(--clr-surface-a50)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #0d0d0d, #1a1a1a)'
-            e.currentTarget.style.boxShadow = `
-              0 1px 3px rgba(0, 0, 0, 0.8),
-              inset 0 4px 8px rgba(0, 0, 0, 0.6),
-              inset 0 2px 4px rgba(0, 0, 0, 0.4)
-            `
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)'
-            e.currentTarget.style.border = '2px solid var(--clr-surface-a40)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #1a1a1a, #0d0d0d)'
-            e.currentTarget.style.boxShadow = `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)'
-            e.currentTarget.style.border = '2px solid var(--clr-surface-a40)'
-            e.currentTarget.style.background = 'linear-gradient(145deg, #1a1a1a, #0d0d0d)'
-            e.currentTarget.style.boxShadow = `
-              0 8px 16px rgba(0, 0, 0, 0.6),
-              0 4px 8px rgba(0, 0, 0, 0.4),
-              0 2px 4px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.15)
-            `
-          }}
-        >
-          <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" style={{ height: '64px', width: 'auto' }} />
-        </button>
-        
-        {/* Cycling Banner */}
-        <div style={{
-          position: 'absolute',
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: '24px',
-          fontWeight: '600',
-          textTransform: 'uppercase',
-          letterSpacing: '2px',
-          fontFamily: '"Orbitron", "Exo 2", "Rajdhani", monospace',
-          color: 'var(--clr-primary-a30)',
-          textShadow: `
-            0 0 5px var(--clr-primary-a30),
-            0 0 10px var(--clr-primary-a30),
-            0 0 15px var(--clr-primary-a30),
-            0 2px 0 #000
-          `,
-          animation: isGlitching 
-            ? 'bannerFadeOut 0.8s cubic-bezier(0.4, 0.0, 0.2, 1)' 
-            : 'subtleGlow 3s ease-in-out infinite',
-          opacity: isGlitching ? 0 : 1,
-          transition: 'opacity 0.8s cubic-bezier(0.4, 0.0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0.0, 0.2, 1)'
-        }}>
-          {bannerTexts[currentTextIndex]}
-          {/* Light sweep overlay */}
-          {!isGlitching && (
-            <div 
-              key={`light-${lightAnimationKey}`}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                overflow: 'hidden',
-                pointerEvents: 'none'
-              }}
-            >
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: '-50px',
-                width: '50px',
-                height: '100%',
-                background: 'rgba(255, 255, 255, 0.25)',
-                filter: 'blur(8px)',
-                animation: 'lightSweepOnce 10s linear forwards',
-                animationIterationCount: 1,
-                pointerEvents: 'none'
-              }} />
-            </div>
-          )}
-        </div>
-        
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <InfoDropdown />
-          {user ? (
-            <>
-              <span style={{ fontSize: '14px', color: 'var(--clr-light-a0)' }}>
-                Hello, {user.user_metadata?.first_name || user.email}
-              </span>
-              <button
-                onClick={handleSignOut}
-                className="secondary"
-                style={{
-                  padding: '8px 16px',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  cursor: 'pointer'
-                }}
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => {
-                // Play click sound
-                try {
-                  const audio = new Audio('/sounds/hsb_kit2_click.wav')
-                  audio.volume = 0.5
-                  audio.play().catch(err => {
-                    // Silently ignore audio errors
-                  })
-                } catch (err) {
-                  // Silently ignore audio errors
-                }
-                setShowAuthModal(true)
-              }}
-              className="primary"
-              style={{
-                padding: '8px 16px',
-                borderRadius: '6px',
-                fontSize: '14px',
-                cursor: 'pointer'
-              }}
-            >
-              Sign In
+      <header className="main-header">
+        <div className="header-row">
+          <div className="header-logo">
+            <button onClick={onLogoClick} className="logo-btn">
+              <img src="/AnalyzeThis_Final_Logo_2048.png" alt="Analyze This" />
             </button>
-          )}
+          </div>
+          <div className="header-banner">
+            <div className="banner-text-container">
+              <span className="banner-text" style={{ position: 'relative', display: 'inline-block' }}>
+                {bannerTexts[currentTextIndex]}
+                {!isGlitching && (
+                  <span
+                    className="banner-light"
+                    key={`light-${lightAnimationKey}`}
+                    style={{
+                      width: '30%', // 30% of text width
+                      height: '100%',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      background: 'rgba(255,255,255,0.25)',
+                      filter: 'blur(8px)',
+                      pointerEvents: 'none',
+                      animation: 'lightSweepExact 5s linear forwards',
+                    }}
+                  />
+                )}
+              </span>
+            </div>
+          </div>
+          <div className="header-actions">
+            {user ? (
+              <>
+                <span className="user-greeting">Hello, {user.user_metadata?.first_name || user.email}</span>
+                <button onClick={handleSignOut} className="secondary signout-btn">Sign Out</button>
+              </>
+            ) : (
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="primary signin-btn"
+              >
+                Sign In
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="header-dropdown-row">
+          <InfoDropdown />
         </div>
       </header>
 

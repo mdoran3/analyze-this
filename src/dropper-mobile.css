@@ -1,0 +1,65 @@
+/* Dropper logo responsiveness */
+.dropper-logo-container {
+  display: inline-block;
+  border-radius: 24px;
+  padding: 20px;
+  background: var(--clr-surface-a20);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 4px 12px rgba(213, 93, 32, 0.2);
+  border: 2px solid var(--clr-surface-a30);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+/* Large by default, shrinks on mobile */
+.dropper-logo-img {
+  height: 480px;
+  width: auto;
+  border-radius: 16px;
+  display: block;
+  max-width: none;
+}
+@media (max-width: 1200px) {
+  .dropper-logo-img {
+    height: auto;
+    max-width: 90vw;
+    max-height: 32vh;
+    min-width: 0;
+    box-sizing: border-box;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .dropper-logo-container {
+    padding: 8px;
+    border-radius: 12px;
+    max-width: 94vw;
+    max-height: 38vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    background: var(--clr-surface-a20);
+  }
+  .dropper-responsive {
+    max-width: 96vw !important;
+    max-height: 40vh !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    overflow: hidden !important;
+  }
+}
+@media (max-width: 768px) {
+  .dropper-responsive {
+    padding: 12px !important;
+    border-radius: 16px !important;
+    min-height: 120px !important;
+    font-size: 14px !important;
+    max-width: 98vw !important;
+  }
+  .dropper-responsive input {
+    font-size: 14px !important;
+  }
+  .dropper-responsive .dropper-icon {
+    font-size: 32px !important;
+    margin-bottom: 8px !important;
+  }
+}
