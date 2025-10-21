@@ -1,3 +1,7 @@
 name = "analyze-this"
 compatibility_date = "2025-10-21"
 assets = { directory = "./dist" }
+
+[vars]
+VITE_SUPABASE_URL = "https://kcwebannutlalymxglyc.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtjd2ViYW5udXRsYWx5bXhnbHljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2NTE2MzAsImV4cCI6MjA3NjIyNzYzMH0.CXNx2CwCYYd9v74ikAV55ldv2KWDIe6TPHlwZvViKDo"
