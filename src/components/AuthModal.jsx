@@ -138,8 +138,8 @@ export default function AuthModal({ onClose, onSuccess }) {
                   borderRadius: '6px',
                   fontSize: '14px',
                   boxSizing: 'border-box',
-                  background: 'var(--clr-surface-a20)',
-                  color: 'var(--clr-light-a0)'
+                  background: 'white',
+                  color: '#333'
                 }}
                 placeholder="Your first name"
                 required
@@ -169,8 +169,8 @@ export default function AuthModal({ onClose, onSuccess }) {
               borderRadius: '6px',
               fontSize: '14px',
               boxSizing: 'border-box',
-              background: 'var(--clr-surface-a20)',
-              color: 'var(--clr-light-a0)'
+              background: 'white',
+              color: '#333'
             }}
             required
           />
@@ -197,8 +197,8 @@ export default function AuthModal({ onClose, onSuccess }) {
               borderRadius: '6px',
               fontSize: '14px',
               boxSizing: 'border-box',
-              background: 'var(--clr-surface-a20)',
-              color: 'var(--clr-light-a0)'
+              background: 'white',
+              color: '#333'
             }}
             required
           />
@@ -226,8 +226,8 @@ export default function AuthModal({ onClose, onSuccess }) {
                 borderRadius: '6px',
                 fontSize: '14px',
                 boxSizing: 'border-box',
-                background: 'var(--clr-surface-a20)',
-                color: 'var(--clr-light-a0)'
+                background: 'white',
+                color: '#333'
               }}
               required
             />

@@ -74,12 +74,12 @@
 
 .modal-input {
   width: 100%;
-  background: var(--clr-surface-a20);
+  background: white;
   border: 1px solid var(--clr-surface-a30);
   border-radius: 8px;
   padding: 14px 16px;
   font-size: 16px;
-  color: var(--clr-light-a0);
+  color: #333;
   margin-bottom: 20px;
   transition: all 0.2s ease;
   box-sizing: border-box;
@@ -165,9 +165,9 @@
 }
 
 .auth-warning {
-  background: var(--clr-primary-a30);
-  border: 1px solid var(--clr-primary-a20);
-  color: var(--clr-primary-a0);
+  background: var(--clr-surface-a20);
+  border: 1px solid var(--clr-surface-a30);
+  color: var(--clr-surface-a60);
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 14px;

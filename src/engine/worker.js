@@ -92,10 +92,10 @@ function analyzeAudio(pcm, sampleRate) {
     try {
       const fallbackResult = detectBpmFallback(pcm, sampleRate)
       if (fallbackResult && typeof fallbackResult === 'object') {
-        bpm = fallbackResult.bpm || 0
+        bpm = Math.round(fallbackResult.bpm || 0)
         bpmConfidence = fallbackResult.confidence || 0.7
       } else {
-        bpm = fallbackResult || 0
+        bpm = Math.round(fallbackResult || 0)
         bpmConfidence = 0.7
       }
     } catch (fallbackError) {
@@ -135,16 +135,16 @@ function detectBpmFallback(pcm, sampleRate) {
           
           if (result && typeof result === 'object') {
             if (result.bpm && result.bpm > 60 && result.bpm < 200) {
-              return { bpm: result.bpm, confidence: 0.7 }
+              return { bpm: Math.round(result.bpm), confidence: 0.7 }
             }
             if (result.beats && result.beats.length > 1) {
               const bpm = calculateBpmFromBeats(result.beats)
               if (bpm > 60 && bpm < 200) {
-                return { bpm, confidence: 0.6 }
+                return { bpm: Math.round(bpm), confidence: 0.6 }
               }
             }
           } else if (typeof result === 'number' && result > 60 && result < 200) {
-            return { bpm: result, confidence: 0.6 }
+            return { bpm: Math.round(result), confidence: 0.6 }
           }
         } catch (err) {
           // BPM tracker failed, continue to next method
@@ -161,7 +161,7 @@ function detectBpmFallback(pcm, sampleRate) {
         if (onsets && onsets.length > 1) {
           const bpm = calculateBpmFromOnsets(onsets, sampleRate)
           if (bpm > 60 && bpm < 200) {
-            return { bpm, confidence: 0.5 }
+            return { bpm: Math.round(bpm), confidence: 0.5 }
           }
         }
       } catch (err) {
@@ -172,7 +172,7 @@ function detectBpmFallback(pcm, sampleRate) {
     // Method 3: Simple autocorrelation-based detection
     const bpm = simpleAutocorrelationBpm(pcm, sampleRate)
     if (bpm > 60 && bpm < 200) {
-      return { bpm, confidence: 0.4 }
+      return { bpm: Math.round(bpm), confidence: 0.4 }
     }
     
     return { bpm: 0, confidence: 0 }

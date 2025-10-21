@@ -303,6 +303,7 @@ export default function App() {
                         pointerEvents: 'none',
                         display: 'flex',
                         alignItems: 'center',
+                        justifyContent: 'flex-end',
                         gap: '8px'
                   }}>
                     {/* Chevron 1 */}
@@ -312,12 +313,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '0.8s'
                     }}></div>
@@ -329,12 +330,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '0.95s'
                     }}></div>
@@ -346,12 +347,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '1.1s'
                     }}></div>
@@ -363,12 +364,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '1.25s'
                     }}></div>
@@ -380,12 +381,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '1.4s'
                     }}></div>
@@ -397,12 +398,12 @@ export default function App() {
                       borderTop: '20px solid transparent',
                       borderBottom: '20px solid transparent',
                       borderLeft: '24px solid #d55d20',
-                      opacity: '0.15',
+                      opacity: '0',
                       filter: `
-                        drop-shadow(0 0 3px #d55d20)
-                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20)
                       `,
-                      transform: 'scale(0.8)',
+                      transform: 'scale(0.5)',
                       animation: 'chevronWave 3.5s infinite',
                       animationDelay: '1.55s'
                     }}></div>
@@ -551,44 +552,51 @@ export default function App() {
                     }
                   }
                   @keyframes chevronWave {
-                    0%, 70%, 100% {
+                    0%, 5% {
+                      opacity: 0;
+                      filter: 
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20);
+                      transform: scale(0.5);
+                    }
+                    10% {
+                      opacity: 0.25;
+                      filter: 
+                        drop-shadow(0 0 4px #d55d20)
+                        drop-shadow(0 0 8px #d55d20)
+                        drop-shadow(0 0 12px #d55d20);
+                      transform: scale(1.1);
+                    }
+                    20% {
+                      opacity: 0.5;
+                      filter: 
+                        drop-shadow(0 0 6px #d55d20)
+                        drop-shadow(0 0 12px #d55d20)
+                        drop-shadow(0 0 18px #d55d20)
+                        drop-shadow(0 0 24px #d55d20);
+                      transform: scale(1.3);
+                    }
+                    30% {
+                      opacity: 0.35;
+                      filter: 
+                        drop-shadow(0 0 5px #d55d20)
+                        drop-shadow(0 0 10px #d55d20)
+                        drop-shadow(0 0 15px #d55d20);
+                      transform: scale(1.15);
+                    }
+                    40% {
                       opacity: 0.15;
                       filter: 
                         drop-shadow(0 0 3px #d55d20)
                         drop-shadow(0 0 6px #d55d20);
-                      transform: scale(0.8);
-                    }
-                    10% {
-                      opacity: 0.5;
-                      filter: 
-                        drop-shadow(0 0 8px #d55d20)
-                        drop-shadow(0 0 16px #d55d20)
-                        drop-shadow(0 0 24px #d55d20);
-                      transform: scale(1.1);
-                    }
-                    20% {
-                      opacity: 1;
-                      filter: 
-                        drop-shadow(0 0 12px #d55d20)
-                        drop-shadow(0 0 24px #d55d20)
-                        drop-shadow(0 0 36px #d55d20)
-                        drop-shadow(0 0 48px #d55d20);
-                      transform: scale(1.3);
-                    }
-                    30% {
-                      opacity: 0.7;
-                      filter: 
-                        drop-shadow(0 0 10px #d55d20)
-                        drop-shadow(0 0 20px #d55d20)
-                        drop-shadow(0 0 30px #d55d20);
-                      transform: scale(1.15);
-                    }
-                    40% {
-                      opacity: 0.3;
-                      filter: 
-                        drop-shadow(0 0 6px #d55d20)
-                        drop-shadow(0 0 12px #d55d20);
                       transform: scale(0.9);
+                    }
+                    50%, 100% {
+                      opacity: 0;
+                      filter: 
+                        drop-shadow(0 0 0px #d55d20)
+                        drop-shadow(0 0 0px #d55d20);
+                      transform: scale(0.5);
                     }
                   }
                   
