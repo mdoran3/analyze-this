@@ -791,7 +791,8 @@ function InfoDropdown() {
         style={{
           position: 'absolute',
           top: '100%',
-          right: '0',
+          left: '50%',
+          transform: 'translateX(-50%)',
           width: '320px',
           background: 'var(--clr-surface-a10)',
           border: '2px solid var(--clr-primary-a20)',

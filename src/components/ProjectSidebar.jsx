@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../auth/AuthContext'
+import '../sidebar-responsive.css'
 
 export default function ProjectSidebar({ onProjectLoad, currentProject, refreshTrigger, onSignOut }) {
   const [projects, setProjects] = useState([])
@@ -179,52 +180,20 @@ export default function ProjectSidebar({ onProjectLoad, currentProject, refreshT
         padding: '16px',
         borderBottom: '1px solid var(--clr-surface-a30)'
       }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: collapsed ? 'center' : 'space-between',
-          marginBottom: collapsed ? 0 : '12px'
-        }}>
+        <div className="sidebar-header-row">
           {!collapsed && (
-            <h3 style={{ margin: 0, color: 'var(--clr-neutral-a30)', fontSize: '14px' }}>
-              My Projects
-            </h3>
+            <h3 className="sidebar-title">My Projects</h3>
           )}
           <button
             onClick={() => {
-              playClickSound(collapsed) // collapsed = true means we're opening, false means closing
+              playClickSound(collapsed)
               setCollapsed(!collapsed)
             }}
             className="collapse-button"
-            style={{
-              background: 'linear-gradient(135deg, var(--clr-primary-a0), #ff6b35)',
-              border: 'none',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              color: 'white',
-              fontSize: '16px',
-              padding: '8px',
-              width: '28px',
-              height: '28px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s ease',
-              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2), 0 0 8px rgba(213, 93, 32, 0.3)',
-              outline: '2px solid var(--clr-primary-a20)',
-              outlineOffset: '2px'
-            }}
           >
-            <span style={{
-              transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)',
-              transition: 'transform 0.2s ease',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              lineHeight: '1'
-            }}>
-              ››
-            </span>
+            <span className="collapse-arrow" style={{
+              transform: collapsed ? 'rotate(0deg)' : 'rotate(180deg)'
+            }}>››</span>
           </button>
         </div>
         

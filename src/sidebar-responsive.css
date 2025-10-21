@@ -1,0 +1,55 @@
+/* Responsive styles for ProjectSidebar header */
+.sidebar-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.sidebar-title {
+  margin: 0;
+  color: var(--clr-neutral-a30);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.collapse-button {
+  background: linear-gradient(135deg, var(--clr-primary-a0), #ff6b35);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  padding: 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 8px rgba(213, 93, 32, 0.3);
+  outline: 2px solid var(--clr-primary-a20);
+  outline-offset: 2px;
+}
+.collapse-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+@media (max-width: 480px) {
+  .sidebar-header-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .sidebar-title {
+    font-size: 13px;
+    text-align: center;
+  }
+  .collapse-button {
+    align-self: flex-end;
+  }
+}
