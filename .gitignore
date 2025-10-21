@@ -19,6 +19,9 @@ dist-ssr
 .env.test.local
 .env.production.local
 
+# Cloudflare Wrangler config (to avoid committing secrets)
+wrangler.toml
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
