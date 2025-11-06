@@ -52,6 +52,43 @@ class MidiPreviewPlayer {
 
     return oscillator
   }
+  
+    // Play a single note as a pulse wave with custom duty cycle (0 < duty < 1)
+    playPulseNote(midiNote, duration = 1.0, startTime = 0, duty = 0.1) {
+      if (!this.isInitialized) return
+
+      const frequency = this.midiToFrequency(midiNote)
+      const oscillator = this.audioContext.createOscillator()
+      const noteGain = this.audioContext.createGain()
+
+      // Generate custom PeriodicWave for pulse
+      const harmonics = 50
+      const real = new Float32Array(harmonics)
+      const imag = new Float32Array(harmonics)
+      for (let n = 1; n < harmonics; n++) {
+        // Fourier series for pulse wave
+        real[n] = (2 / (n * Math.PI)) * Math.sin(n * Math.PI * duty)
+        imag[n] = 0
+      }
+      const wave = this.audioContext.createPeriodicWave(real, imag)
+      oscillator.setPeriodicWave(wave)
+      oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime + startTime)
+
+      // ADSR envelope (same as playNote)
+      noteGain.gain.setValueAtTime(0, this.audioContext.currentTime + startTime)
+      noteGain.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + startTime + 0.1)
+      noteGain.gain.linearRampToValueAtTime(0.2, this.audioContext.currentTime + startTime + 0.2)
+      noteGain.gain.setValueAtTime(0.2, this.audioContext.currentTime + startTime + duration - 0.1)
+      noteGain.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + startTime + duration)
+
+      oscillator.connect(noteGain)
+      noteGain.connect(this.gainNode)
+
+      oscillator.start(this.audioContext.currentTime + startTime)
+      oscillator.stop(this.audioContext.currentTime + startTime + duration)
+
+      return oscillator
+    }
 
   // Play a chord (multiple notes simultaneously)
   playChord(midiNotes, duration = 2.0) {

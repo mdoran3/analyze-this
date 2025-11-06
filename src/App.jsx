@@ -450,44 +450,6 @@ export default function App() {
               {/* Results section - takes main area when analysis is complete */}
               {result && (
                 <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto' }}>
-                  {/* Analyze Another Song button at top */}
-                  <div style={{ marginBottom: '24px', textAlign: 'left' }}>
-                    <button
-                      onClick={() => {
-                        setResult(null)
-                        setSavePromptData(null)
-                        setError('')
-                        setProgress(0)
-                        setCurrentProject(null)
-                        setShowSavePrompt(false)
-                      }}
-                      style={{
-                        background: 'linear-gradient(135deg, var(--clr-surface-a30), var(--clr-surface-a20))',
-                        border: '1px solid var(--clr-primary-a0)',
-                        borderRadius: '6px',
-                        padding: '12px 20px',
-                        cursor: 'pointer',
-                        color: 'var(--clr-light-a0)',
-                        fontSize: '16px',
-                        fontWeight: '500',
-                        letterSpacing: '0.5px',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                        transition: 'all 0.3s ease',
-                        textShadow: '0 1px 2px rgba(0, 0, 0, 0.5)'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.transform = 'translateY(-1px)'
-                        e.target.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.transform = 'translateY(0)'
-                        e.target.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)'
-                      }}
-                    >
-                      Analyze Another Song
-                    </button>
-                  </div>
-                  
                   <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <CircleOfFifths keyName={result.key} mode={result.mode} />
                     <div style={{ flex: 1, minWidth: '200px', textAlign: 'center' }}>
@@ -809,8 +771,8 @@ function InfoDropdown() {
         }}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
-          onClick={() => setIsExpanded(false)}
-          onTouchStart={() => setIsExpanded(false)}
+        onClick={() => setIsExpanded(false)}
+        onTouchStart={() => setIsExpanded(false)}
       >
         <div style={{
           color: 'var(--clr-light-a0)',

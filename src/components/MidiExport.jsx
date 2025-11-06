@@ -47,6 +47,8 @@ export default function MidiExport({ keyName, mode, bpm }) {
   const [midiData, setMidiData] = useState(null)
   const [player, setPlayer] = useState(null)
   const [playing, setPlaying] = useState(null) // Track what's currently playing
+  const [waveform, setWaveform] = useState('sine') // 'sine', 'square', 'triangle', 'sawtooth', 'pulse', 'organ', 'bell', 'metallic'
+  const [pulseDuty, setPulseDuty] = useState(0.1)
   
   React.useEffect(() => {
     if (keyName && mode) {
@@ -70,41 +72,173 @@ export default function MidiExport({ keyName, mode, bpm }) {
 
   const handlePlay = async (type, data, id) => {
     if (!player) return
-
     try {
-      // Stop any currently playing audio
       player.stopAll()
-      
-      // Initialize audio context if needed (requires user interaction)
       if (!player.isInitialized) {
         await player.initialize()
       }
-
       setPlaying(id)
-
-      switch (type) {
-        case 'scale':
-          await player.playScale(data.notes)
-          break
-        case 'chord':
-          await player.playChord(data.notes)
-          break
-        case 'progression':
-          await player.playProgression(data.chords)
-          break
-        case 'arpeggio':
-          await player.playArpeggio(data, bpm || 120)
-          break
-        default:
-          break
+      // Use selected waveform for preview
+      // Custom waveform harmonics
+      const customWaves = {
+        organ: {
+          real: [0, 1, 0.5, 0.3, 0.2, 0.1],
+          imag: [0, 0, 0, 0, 0, 0]
+        },
+        bell: {
+          real: [0, 0.8, 0.6, 0.3, 0.1, 0.05],
+          imag: [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+        },
+        metallic: {
+          real: [0, 1, 0.7, 0.5, 0.3, 0.2],
+          imag: [0, 0.5, 0.7, 0.9, 0.7, 0.5]
+        }
       }
-
-      // Auto-stop playing indicator after a reasonable time
+      if (['organ', 'bell', 'metallic'].includes(waveform)) {
+        const waveDef = customWaves[waveform]
+        const makeCustomOsc = (osc) => {
+          if (player && player.audioContext && waveDef) {
+            const wave = player.audioContext.createPeriodicWave(
+              new Float32Array(waveDef.real),
+              new Float32Array(waveDef.imag)
+            )
+            osc.setPeriodicWave(wave)
+          }
+        }
+        switch (type) {
+          case 'scale':
+            data.notes.slice(0, 8).forEach((note, idx) => {
+              const osc = player.playNote(note, 0.5, idx * 0.4)
+              if (osc) makeCustomOsc(osc)
+            })
+            break
+          case 'chord':
+            data.notes.forEach(note => {
+              const osc = player.playNote(note, 2.0, 0)
+              if (osc) makeCustomOsc(osc)
+            })
+            break
+          case 'progression':
+            data.chords.forEach((chord, chordIdx) => {
+              chord.notes.forEach(note => {
+                const osc = player.playNote(note, 1.5, chordIdx * 1.5)
+                if (osc) makeCustomOsc(osc)
+              })
+            })
+            break
+          case 'arpeggio':
+            const notes = data.notes || data.pattern || []
+            notes.forEach((noteData, idx) => {
+              let midiNote, startTime
+              if (typeof noteData === 'object' && noteData.note !== undefined) {
+                midiNote = noteData.note
+                startTime = (noteData.startTime / 480) * (60 / (bpm || 120))
+              } else if (typeof noteData === 'number') {
+                midiNote = noteData
+                startTime = idx * (60 / (bpm || 120)) / 4
+              } else {
+                return
+              }
+              if (midiNote > 0) {
+                const osc = player.playNote(midiNote, 0.15, startTime)
+                if (osc) makeCustomOsc(osc)
+              }
+            })
+            break
+          default:
+            break
+        }
+      } else if (waveform === 'pulse') {
+        switch (type) {
+          case 'scale':
+            data.notes.slice(0, 8).forEach((note, idx) => {
+              player.playPulseNote(note, 0.5, idx * 0.4, pulseDuty)
+            })
+            break
+          case 'chord':
+            data.notes.forEach(note => {
+              player.playPulseNote(note, 2.0, 0, pulseDuty)
+            })
+            break
+          case 'progression':
+            data.chords.forEach((chord, chordIdx) => {
+              chord.notes.forEach(note => {
+                player.playPulseNote(note, 1.5, chordIdx * 1.5, pulseDuty)
+              })
+            })
+            break
+          case 'arpeggio':
+            const notes = data.notes || data.pattern || []
+            notes.forEach((noteData, idx) => {
+              let midiNote, startTime
+              if (typeof noteData === 'object' && noteData.note !== undefined) {
+                midiNote = noteData.note
+                startTime = (noteData.startTime / 480) * (60 / (bpm || 120))
+              } else if (typeof noteData === 'number') {
+                midiNote = noteData
+                startTime = idx * (60 / (bpm || 120)) / 4
+              } else {
+                return
+              }
+              if (midiNote > 0) {
+                player.playPulseNote(midiNote, 0.15, startTime, pulseDuty)
+              }
+            })
+            break
+          default:
+            break
+        }
+      } else {
+        // Use standard oscillator types
+        const oscType = waveform
+        switch (type) {
+          case 'scale':
+            data.notes.slice(0, 8).forEach((note, idx) => {
+              const osc = player.playNote(note, 0.5, idx * 0.4)
+              if (osc) osc.type = oscType
+            })
+            break
+          case 'chord':
+            data.notes.forEach(note => {
+              const osc = player.playNote(note, 2.0, 0)
+              if (osc) osc.type = oscType
+            })
+            break
+          case 'progression':
+            data.chords.forEach((chord, chordIdx) => {
+              chord.notes.forEach(note => {
+                const osc = player.playNote(note, 1.5, chordIdx * 1.5)
+                if (osc) osc.type = oscType
+              })
+            })
+            break
+          case 'arpeggio':
+            const notes = data.notes || data.pattern || []
+            notes.forEach((noteData, idx) => {
+              let midiNote, startTime
+              if (typeof noteData === 'object' && noteData.note !== undefined) {
+                midiNote = noteData.note
+                startTime = (noteData.startTime / 480) * (60 / (bpm || 120))
+              } else if (typeof noteData === 'number') {
+                midiNote = noteData
+                startTime = idx * (60 / (bpm || 120)) / 4
+              } else {
+                return
+              }
+              if (midiNote > 0) {
+                const osc = player.playNote(midiNote, 0.15, startTime)
+                if (osc) osc.type = oscType
+              }
+            })
+            break
+          default:
+            break
+        }
+      }
       setTimeout(() => {
         setPlaying(null)
       }, type === 'scale' ? 4000 : type === 'progression' ? 6000 : type === 'arpeggio' ? 6000 : 2500)
-
-        } catch (error) {
+    } catch (error) {
       setError('Audio preview failed')
     }
   }
@@ -139,6 +273,20 @@ export default function MidiExport({ keyName, mode, bpm }) {
       marginTop: '16px',
       minWidth: '300px'
     }}>
+      <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <label style={{ fontSize: '13px', color: 'var(--clr-light-a0)' }}>Waveform:</label>
+        <select value={waveform} onChange={e => setWaveform(e.target.value)} style={{ fontSize: '13px', padding: '2px 8px', borderRadius: '4px' }}>
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+          <option value="sawtooth">Sawtooth</option>
+          <option value="pulse">Pulse</option>
+          <option value="organ">Organ</option>
+          <option value="bell">Bell</option>
+          <option value="metallic">Metallic</option>
+        </select>
+        {/* No duty cycle input for pulse waveform */}
+      </div>
       <style>
         {`
           @keyframes blink {
