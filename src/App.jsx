@@ -856,7 +856,7 @@ function AuthHeader({ onSignOut, onLogoClick }) {
   const [lightAnimationKey, setLightAnimationKey] = React.useState(0)
 
   const bannerTexts = [
-    "analyze any sound",
+    "analyze your music",
     "find its key", 
     "get the BPM",
     "preview musical ideas",
