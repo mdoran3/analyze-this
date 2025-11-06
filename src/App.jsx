@@ -809,6 +809,8 @@ function InfoDropdown() {
         }}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
+          onClick={() => setIsExpanded(false)}
+          onTouchStart={() => setIsExpanded(false)}
       >
         <div style={{
           color: 'var(--clr-light-a0)',
